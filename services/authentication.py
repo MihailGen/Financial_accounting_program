@@ -1,20 +1,17 @@
-
-
-def login(self, login, pswd):
-    if check_log(login):
-        try:
-            with open('bank_clients/' + login + '.' + 'passwordhash.txt') as file_hash:
-                if hash_funct(passw) == file_hash.readline():
-                        file_hash.close()
-                else:
-                        print('\n*************\nIncorrect password')
-                        return False
-        except FileNotFoundError:
-            print('A system error has occurred!\n Please contact an administrator.\n')
-            return False
-        return True
-    else:
-     return False
+def login(login, pswd):
+    pass
+    # with open('bank_clients/' + login + '.' + 'passwordhash.txt') as file_hash:
+    #     if hash_funct(passw) == file_hash.readline():
+    #                     file_hash.close()
+    #             else:
+    #                     print('\n*************\nIncorrect password')
+    #                     return False
+    #     except FileNotFoundError:
+    #         print('A system error has occurred!\n Please contact an administrator.\n')
+    #         return False
+    #     return True
+    # else:
+    #  return False
 
 
 # Create Hash for password

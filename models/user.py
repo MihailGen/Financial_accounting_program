@@ -11,6 +11,7 @@ class User:
 
     # Регистрация пользователя
     def register(self):
+        print("Start registr")
         # подготовка словаря для добавления в файл пользователя
         # пароль хэшируем
         data = {
@@ -26,21 +27,8 @@ class User:
 
 
     # для входа в систему
-    def login(self, login, pswd):
-        if check_log(login):
-            try:
-                with open('bank_clients/' + login + '.' + 'passwordhash.txt') as file_hash:
-                    if hash_funct(passw) == file_hash.readline():
-                        file_hash.close()
-                    else:
-                        print('\n*************\nIncorrect password')
-                        return False
-            except FileNotFoundError:
-                print('A system error has occurred!\n Please contact an administrator.\n')
-                return False
-            return True
-        else:
-            return False
+    def login(self, username, password):
+        file_handler.login(data)
 
     # для обновления профиля пользователя
     def update_profile(self):
