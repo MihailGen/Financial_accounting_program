@@ -2,10 +2,6 @@ import sys
 from models.user import User
 
 
-# sys.path.append('services/')
-# sys.path.append('utils/')
-
-#from models import user
 money = 0
 print("******************************************")
 print("@@@@@  FINANCIAL ACCOUNTING PROGRAM  @@@@@")
@@ -48,7 +44,10 @@ while True:
 
     # Login
     elif choice == 2:
-        user = User(login, password, email)
+        login = str(input("Enter your login: "))
+        password = str(input("Enter your password: "))
+        user = User(login, password, "")
+        user.login()
 
     # Money withdraw
     elif choice == 3:
