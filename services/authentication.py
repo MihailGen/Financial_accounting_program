@@ -42,5 +42,5 @@ def hash_funct(pswd):
     mult = mult % config.settings.CONST_FOR_HASH
     return str(summ) + str(mult)
 
-path_new = Paths()
-path_new.path_accounts("MisaGen")
+# path_new = Paths()
+# path_new.path_accounts("MisaGen")

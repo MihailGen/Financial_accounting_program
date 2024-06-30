@@ -3,7 +3,6 @@ from services import authentication
 
 
 class Account:
-
     def __init__(self,  account_id,  name, currency, balance):
         self.account_id = account_id
         self.name = name
@@ -12,15 +11,18 @@ class Account:
 
     # Добавление дохода
     def add_income(self, amount):
-        pass
+        self.balance += amount
 
     # Регистрация расхода
     def add_expense(self, amount):
-        pass
+        if amount > self.balance:
+            self.balance -= amount
+        else:
+            print('Insufficient funds')
 
     # Получение текущего баланса
     def get_balance(self):
-        pass
+        return self.balance
 
     # Осуществление перевода средств на другой счет
     def transfer(self, other_account, amount):
