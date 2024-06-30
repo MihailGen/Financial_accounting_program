@@ -1,5 +1,7 @@
 import sys
 from models.user import User
+from models.account import Account
+from services.account_management import save_account_to_json
 
 
 money = 0
@@ -63,11 +65,8 @@ while True:
 
     # Display balance
     elif choice == 4:
-        if password != str(input("Enter your password: ")) or password == "":
-            print("Wrong password!")
-        else:
-            print("Your current balance is: " + str(money))
-            print("")
+        acc = Account(2, "Счёт в банке Цитадель", "RUB", 1000)
+        save_account_to_json("mihailGen", acc)
 
     # Exit
     elif choice == 5:

@@ -11,8 +11,8 @@ class Paths:
     def path_accounts(self, login):
         str_for_path = "data/accounts/" + login + "_accounts.json"
         print(str_for_path + "----from file_handler")
-        return str_for_path
-
+        return Path(str_for_path)
+        # return str_for_path
 
 CONST_FOR_HASH = 68429
 
