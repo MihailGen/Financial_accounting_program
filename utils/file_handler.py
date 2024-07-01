@@ -2,24 +2,26 @@ import os
 import json
 import time
 from pathlib import Path
+from config.settings import Paths
+import config.settings
 
 
-# Запись нового пользователя в файл всех пользователей
-def user_to_datafile (data):
-    path = Path("data/data_file.json")
-    # проверяем случай, когда файл пустой
-    if (os.stat(path).st_size == 0):
-        path.write_text(json.dumps(data), encoding='utf-8')
-    else:
-        data_tmp = json.loads(path.read_text(encoding='utf-8'))
-        data_tmp.update(data)
-        path.write_text(json.dumps(data_tmp), encoding='utf-8')
+def read_json(path):
+    try:
+        if (os.stat(path).st_size == 0):
+            return False
+    except FileNotFoundError:
+        return False
 
-# проверка пароля
-def login(username, password):
-    path = Path("data/data_file.json")
-    data_tmp = json.loads(path.read_text(encoding='utf-8'))
-    if username in data_tmp[username:[]]:
-        print (data_tmp[username])
-        if (data_tmp[username:[]] == password):
-            print("Password is correct")
+    try:
+        return json.loads(path.read_text(encoding='utf-8'))
+    except json.decoder.JSONDecodeError:
+        print("Invalid JSON")
+
+
+def write_json(path, data):
+    try:
+        return path.write_text(json.dumps(data), encoding='utf-8')
+                # path.write_text(json.dumps(data_tmp), encoding='utf-8')
+    except json.decoder.JSONDecodeError:
+        print("Invalid JSON")
