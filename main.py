@@ -2,23 +2,50 @@ import sys
 from models.user import User
 from models.account import Account
 from services.account_management import save_account_to_json
+from services.account_management import create_id_for_account
+from services.authentication import login
 
 
-money = 0
 print("******************************************")
 print("@@@@@  FINANCIAL ACCOUNTING PROGRAM  @@@@@")
 print("******************************************")
 print("")
 
+
+username = ''
+
+while username == '':
+    log = input("Please enter your username: ")
+    password = input("Please enter your password: ")
+    if login(log, password):
+        username = login(log, password)
+    else:
+        print("\nLogin or password is wrong!\nWant to try again?\n")
+        response = input("If Yes, print Y,\nif You want to register, print R,\nif Exit, print E: ")
+        if (response == "R" or response == "r"):
+            print("Please register\n")
+            name = input("Enter your name: ")
+            surname = input("Enter your surname: ")
+            login = name + surname
+            email = input("Enter your email: ")
+            password = input("Enter your password: ")
+            user = User(login, password, email)
+            user.register()
+            print("")
+            username = login
+        if  (response == "E" or response == "e"):
+            print("Thanks, goodbye!")
+            exit()
+
 while True:
     print("What would you like to do?")
     print("1. Registration")
-    print("2. Login in program")
+    print("2. Login program")
     print("3. Update_profile")
-    print("4. Add income")
+    print("4. Create account")
     print("5. Exit")
-    print("6. Exit")
-    print("7. Exit")
+    print("6. Display balance for account")
+    print("7. Display total balance")
     print("8. Exit")
     print("9. Exit")
     print("10. Exit")
@@ -31,11 +58,11 @@ while True:
 
     # Registration
     if choice == 1:
-        name = str(input("Enter your name: "))
-        surname = str(input("Enter your surname: "))
+        name = input("Enter your name: ")
+        surname = input("Enter your surname: ")
         login = name + surname
-        email = str(input("Enter your email: "))
-        password = str(input("Enter your password: "))
+        email = input("Enter your email: ")
+        password = input("Enter your password: ")
         user = User(login, password, email)
         user.register()
         print("")
@@ -46,13 +73,28 @@ while True:
 
     # Login
     elif choice == 2:
-        login = str(input("Enter your login: "))
-        password = str(input("Enter your password: "))
+        login = input("Enter your login: ")
+        password = input("Enter your password: ")
         user = User(login, password, "")
         user.login()
 
-    # Money withdraw
+    # Update_profile
     elif choice == 3:
+        print("Thanks, goodbye!")
+        break
+
+    # Create account
+    elif choice == 4:
+        login = input("Enter your login: ")
+        name = input("Enter accounts name: ")
+        currency = input("Enter the number of currency for your account\n 1 - Rub \n 2 - $ \n 3 - €\nYour choice: ")
+        balance = float(input("Enter the balance in your account: "))
+        acc = Account(create_id_for_account(login), name, currency, balance)
+        save_account_to_json(login, acc)
+
+    # Exit
+    elif choice == 5:
+        """""
         if password != str(input("Enter your password: ")) or password == "":
             print("Wrong password!")
         else:
@@ -62,16 +104,7 @@ while True:
             print("Withdrawal completed successfully")
             print("Your current balance is: " + str(money))
             print("")
-
-    # Display balance
-    elif choice == 4:
-        acc = Account(2, "Счёт в банке Цитадель", "RUB", 1000)
-        save_account_to_json("mihailGen", acc)
-
-    # Exit
-    elif choice == 5:
-        print("Thanks, goodbye!")
-        break
+        """
 
     elif choice == 6:
         print("Thanks, goodbye!")
@@ -125,3 +158,11 @@ while True:
     else:
         print("Wrong operation number, please try again!")
         print("")
+
+
+def main():
+    pass
+
+
+if __name__ == "__main__":
+    main()

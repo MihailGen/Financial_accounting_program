@@ -3,11 +3,12 @@ from services import authentication
 
 
 class Account:
-    def __init__(self,  account_id,  name, currency, balance):
+    def __init__(self,  account_id,  name, currency, balance, status):
         self.account_id = account_id
         self.name = name
         self.currency = currency
         self.balance = balance
+        self.status = status
 
     # Добавление дохода
     def add_income(self, amount):

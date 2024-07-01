@@ -14,6 +14,9 @@ def login(login, password):
         print(login)
         if (data_tmp[login][0] == hash_funct(password)):
             print("Password is correct")
+        return login
+    else:
+        return False
 
 
 # для выхода из системы,
