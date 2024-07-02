@@ -3,7 +3,7 @@ from services import authentication
 
 
 class Account:
-    def __init__(self,  account_id,  name, currency, balance, status):
+    def __init__(self,  account_id,  name, currency, balance, status=0):
         self.account_id = account_id
         self.name = name
         self.currency = currency

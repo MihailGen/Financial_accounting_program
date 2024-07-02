@@ -1,6 +1,10 @@
 import sys
+import datetime
 from models.user import User
 from models.account import Account
+from models.transaction import Transaction
+# from services.transaction_management import import save_account_to_json
+from services.transaction_management import create_id_for_transaction
 from services.account_management import save_account_to_json
 from services.account_management import create_id_for_account
 from services.authentication import login
@@ -39,58 +43,47 @@ while username == '':
 
 while True:
     print("What would you like to do?")
-    print("1. Registration")
-    print("2. Login program")
-    print("3. Update_profile")
-    print("4. Create account")
-    print("5. Exit")
-    print("6. Display balance for account")
-    print("7. Display total balance")
+    print("1. Update_profile")
+    print("2. Create account")
+    print("3. Create transaction")
+    print("4. Display balance for account")
+    print("5. Display total balance")
+    print("6. Exit")
+    print("7. Exit")
     print("8. Exit")
     print("9. Exit")
     print("10. Exit")
     print("11. Exit")
-    print("12. Exit")
-    print("13. Exit")
-    print("14. Exit")
-
-    choice = int(input("Enter your choice: "))
-
-    # Registration
-    if choice == 1:
-        name = input("Enter your name: ")
-        surname = input("Enter your surname: ")
-        login = name + surname
-        email = input("Enter your email: ")
-        password = input("Enter your password: ")
-        user = User(login, password, email)
-        user.register()
-        print("")
-        print(f"Congratulation!\nYou are registered as {login}")
-        print("")
-        print(f"Your password is: {password}")
-        print("")
-
-    # Login
-    elif choice == 2:
-        login = input("Enter your login: ")
-        password = input("Enter your password: ")
-        user = User(login, password, "")
-        user.login()
+    choice = int(input("\nEnter your choice: "))
 
     # Update_profile
-    elif choice == 3:
-        print("Thanks, goodbye!")
-        break
+    if choice == 1:
+        pass
 
     # Create account
-    elif choice == 4:
+    elif choice == 2:
         login = input("Enter your login: ")
         name = input("Enter accounts name: ")
         currency = input("Enter the number of currency for your account\n 1 - Rub \n 2 - $ \n 3 - €\nYour choice: ")
         balance = float(input("Enter the balance in your account: "))
         acc = Account(create_id_for_account(login), name, currency, balance)
         save_account_to_json(login, acc)
+
+    # Create transaction
+    elif choice == 3:
+        transaction_id = create_id_for_transaction(username)
+        account_id = input("Enter the account ID: ")
+        amount = input("Enter the amount: ")
+        transaction_type = input("Enter the type of transaction\n 1 - Adding income \n2 - expense registration: ")
+        current_date = datetime.datetime.now()
+        transaction = Transaction(transaction_id, account_id, amount, transaction_type, current_date.strftime('%m/%d/%y %H:%M:%S'))
+        print (current_date.strftime('%m/%d/%y %H:%M:%S'))
+
+        break
+
+    # Display balance for account
+    elif choice == 4:
+        pass
 
     # Exit
     elif choice == 5:
