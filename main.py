@@ -6,15 +6,16 @@ from models.transaction import Transaction
 # from services.transaction_management import import save_account_to_json
 from services.transaction_management import create_id_for_transaction
 from services.account_management import save_account_to_json
+from services.account_management import account_from_file
 from services.account_management import create_id_for_account
 from services.authentication import login
-
 
 print("******************************************")
 print("@@@@@  FINANCIAL ACCOUNTING PROGRAM  @@@@@")
 print("******************************************")
 print("")
 
+# account_from_file ("mm", "1")
 
 username = ''
 
@@ -37,7 +38,7 @@ while username == '':
             user.register()
             print("")
             username = login
-        if  (response == "E" or response == "e"):
+        if (response == "E" or response == "e"):
             print("Thanks, goodbye!")
             exit()
 
@@ -66,18 +67,47 @@ while True:
         name = input("Enter accounts name: ")
         currency = input("Enter the number of currency for your account\n 1 - Rub \n 2 - $ \n 3 - €\nYour choice: ")
         balance = float(input("Enter the balance in your account: "))
-        acc = Account(create_id_for_account(login), name, currency, balance)
-        save_account_to_json(login, acc)
+        account = Account(create_id_for_account(login), username, name, currency, balance)
+        save_account_to_json(login, account)
 
     # Create transaction
     elif choice == 3:
+        # Генерируем ID для транзакции
         transaction_id = create_id_for_transaction(username)
+
+        # Запрашиваем у пользователя данные о транзакции
         account_id = input("Enter the account ID: ")
-        amount = input("Enter the amount: ")
-        transaction_type = input("Enter the type of transaction\n 1 - Adding income \n2 - expense registration: ")
+        amount = float(input("Enter the amount: "))
+        transaction_type = input("Enter the type of transaction\n1 - Adding income \n2 - expense registration: ")
+        description = input("Write a description of transaction: ")
         current_date = datetime.datetime.now()
-        transaction = Transaction(transaction_id, account_id, amount, transaction_type, current_date.strftime('%m/%d/%y %H:%M:%S'))
-        print (current_date.strftime('%m/%d/%y %H:%M:%S'))
+
+        # Запрашиваем у пользователя данные о транзакции
+        transaction = Transaction(transaction_id, username, account_id, amount, transaction_type, description,
+                                  current_date.strftime('%d.%m.%y %H:%M:%S'))
+
+        # Вытаскиваем из файла данные о счёте хитрым способом
+        data = account_from_file(username, account_id)
+
+        currency = data['currency']
+        name = data['name']
+        balance = data['balance']
+        print(account_from_file(username, account_id))
+        print(balance)
+        print("111")
+
+
+        # cоздаём объект account, на основе того, что вытащили, проводим операцию с балансом
+        account = Account(account_id, username, name, currency, balance)
+        if transaction_type == "1":
+            account.add_income(amount)
+        if transaction_type == "2":
+            account.add_expense(amount)
+
+        # записываем операцию в JSON
+        transaction.record_transaction()
+
+        print(current_date.strftime('%d.%m.%y %H:%M:%S'))
 
         break
 

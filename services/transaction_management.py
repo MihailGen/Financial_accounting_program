@@ -6,8 +6,32 @@ from config.settings import Paths
 
 
 # Addition a transaction
-def add_transaction(account_id, amount, transaction_type):
+def add_transaction(account_id, amount, transaction_type, description):
     pass
+    """data = {
+        account.account_id: {
+            "name": account.name,
+            "currency": account.currency,
+            "balance": account.balance
+        }
+    }
+    path = Paths.path_accounts(login)
+    # если файла не существует, записываем в него данные сразу
+    print(path)
+    try:
+        if not os.path.isfile(path):
+            with open(path, "w", encoding="utf-8") as file:
+                write_json(path, data)
+        # иначе - вытаскиваем из файла структуру, дополняем её и вновь записываем
+        else:
+            data_tmp = read_json(path)
+            data_tmp.update(data)
+            if data_tmp:
+                write_json(path, data_tmp)
+            else:
+                write_json(path, data)
+    except FileNotFoundError:
+        return False"""
 
 
 # get a list of account transactions in a given date range

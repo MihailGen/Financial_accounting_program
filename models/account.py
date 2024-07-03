@@ -1,10 +1,12 @@
-from utils import file_handler
-from services import authentication
+from utils.file_handler import read_json
+from config.settings import Paths
+from services.account_management import update_account_balance
 
 
 class Account:
-    def __init__(self,  account_id,  name, currency, balance, status=0):
+    def __init__(self,  account_id, username, name, currency, balance, status=0):
         self.account_id = account_id
+        self.username = username
         self.name = name
         self.currency = currency
         self.balance = balance
@@ -12,12 +14,19 @@ class Account:
 
     # Добавление дохода
     def add_income(self, amount):
-        self.balance += amount
+        self.balance += float(amount)
+        # print(self.username + self.account_id + self.balance + "<-add_expense")
+        update_account_balance(self.username, self.account_id, self.balance)
+
 
     # Регистрация расхода
     def add_expense(self, amount):
-        if amount > self.balance:
+
+        if float(amount) > self.balance:
             self.balance -= amount
+            print(self.username + self.account_id + self.balance + "<-add_expense")
+            update_account_balance(self.username, self.account_id, self.balance)
+
         else:
             print('Insufficient funds')
 
