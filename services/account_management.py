@@ -47,9 +47,9 @@ def save_account_to_json(login, account):
 
 
 def account_from_file(username, account_id):
-    print(Paths.path_accounts(username))
+    # print(Paths.path_accounts(username))
     data_tmp = read_json(Paths.path_accounts(username))
-    print(data_tmp[account_id])
+    # print(data_tmp[account_id])
     return data_tmp[account_id]
 
 
@@ -59,11 +59,11 @@ def update_account(account_id, name, currency, balance):
 
 # rewrite balance
 def update_account_balance(username, account_id, balance):
-    print('Start update_account_balance')
+    # print('Start update_account_balance')
     path = Paths.path_accounts(username)
-    print(path)
+    # print(path)
     data_tmp = read_json(path)
-    print(data_tmp)
+    # print(data_tmp)
     data_tmp[account_id]["balance"] = balance
     write_json(path, data_tmp)
 

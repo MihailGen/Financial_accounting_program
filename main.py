@@ -1,9 +1,7 @@
-import sys
 import datetime
 from models.user import User
 from models.account import Account
 from models.transaction import Transaction
-# from services.transaction_management import import save_account_to_json
 from services.transaction_management import create_id_for_transaction
 from services.account_management import save_account_to_json
 from services.account_management import account_from_file
@@ -79,6 +77,14 @@ while True:
         account_id = input("Enter the account ID: ")
         amount = float(input("Enter the amount: "))
         transaction_type = input("Enter the type of transaction\n1 - Adding income \n2 - expense registration: ")
+        if transaction_type == "1":
+            transaction_type = "Incom"
+        elif transaction_type == "2":
+            transaction_type = "Payment"
+        else:
+            print("Not correct number, please try again")
+            break
+
         description = input("Write a description of transaction: ")
         current_date = datetime.datetime.now()
 
@@ -92,10 +98,6 @@ while True:
         currency = data['currency']
         name = data['name']
         balance = data['balance']
-        print(account_from_file(username, account_id))
-        print(balance)
-        print("111")
-
 
         # cоздаём объект account, на основе того, что вытащили, проводим операцию с балансом
         account = Account(account_id, username, name, currency, balance)
@@ -106,9 +108,6 @@ while True:
 
         # записываем операцию в JSON
         transaction.record_transaction()
-
-        print(current_date.strftime('%d.%m.%y %H:%M:%S'))
-
         break
 
     # Display balance for account

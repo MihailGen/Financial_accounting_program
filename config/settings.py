@@ -8,6 +8,8 @@ class Paths:
     users_json = Path("data/users.json")
     accounts_json =  Path("data/accounts")
     transactions_json = Path("data/transactions")
+    logs_json = Path("data/logs/logs.json")
+
     @classmethod
     def path_accounts(self, login):
         str_for_path = "data/accounts/" + login + "_accounts.json"

@@ -22,9 +22,8 @@ class Account:
     # Регистрация расхода
     def add_expense(self, amount):
 
-        if float(amount) > self.balance:
+        if float(amount) < self.balance:
             self.balance -= amount
-            print(self.username + self.account_id + self.balance + "<-add_expense")
             update_account_balance(self.username, self.account_id, self.balance)
 
         else:
