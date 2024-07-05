@@ -1,7 +1,8 @@
-# from models.account import Account
+from models.account import Account
 from utils.file_handler import read_json
 from utils.file_handler import write_json
 from config.settings import Paths
+from utils.logger import logger_events
 from pathlib import Path
 
 import os
@@ -10,10 +11,10 @@ import json
 
 # Управление счетами пользователей
 
-def create_account(account_id, name, currency, balance):
-    pass
-    # account = Account(account_id, name, currency, balance)
-    # read_json(Paths.path_accounts())
+@logger_events("Create account")
+def create_account(username, name, currency, balance):
+    account = Account(create_id_for_account(username), username, name, currency, balance)
+    save_account_to_json(username, account)
 
 
 # write accounts to the JSON

@@ -10,6 +10,8 @@ class User:
         self.email = email
 
     # Регистрация пользователя
+
+
     def register(self):
         authentication.register(self.username, self.password, self.email)
         print("\n*************\nCongratulation!!!\nYou have successfully created new account\nYour login:  " + self.username + "\n")

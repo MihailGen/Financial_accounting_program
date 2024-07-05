@@ -5,33 +5,44 @@ import config.settings
 from config.settings import Paths
 from utils.file_handler import read_json
 from utils.file_handler import write_json
+from utils.logger import logger_events
 
 
 # для входа пользователя
+@logger_events("Login to system")
 def login(login, password):
     data_tmp = read_json(Paths.users_json)
     if login in data_tmp:
         print(login)
         if (data_tmp[login][0] == hash_funct(password)):
             print("Password is correct")
-        return login
+        result = True
     else:
-        return False
+        result = False
+    return result
 
 
 # для выхода из системы,
-def logout():
-    pass
+@logger_events("Logout")
+def logout(username):
+    print(f"Thanks {username}! See you later!")
+    exit()
 
 
-# для регистрации нового пользователя.
+# для регистрации нового пользователя
+@logger_events("Registration")
 def register(username, password, email):
-    data_tmp = read_json(Paths.users_json)
-    data = {
-        username: [hash_funct(password), email],
-    }
-    data_tmp.update(data)
-    write_json(Paths.users_json, data_tmp)
+    try:
+        data_tmp = read_json(Paths.users_json)
+        data = {
+            username: [hash_funct(password), email],
+        }
+        data_tmp.update(data)
+        write_json(Paths.users_json, data_tmp)
+    except Exception as e:
+        print(e)
+        return False
+    return True
 
 
 # Create Hash for password

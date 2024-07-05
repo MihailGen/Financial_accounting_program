@@ -22,4 +22,4 @@ class Paths:
 
 
 CONST_FOR_HASH = 68429
-
+currency = ("Reserved", "Rub", "$", "€")
