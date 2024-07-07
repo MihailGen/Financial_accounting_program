@@ -47,20 +47,20 @@ def logger_events(type_operation) -> object:
             if type_operation == "Create account":
                 data = {
                     current_date.strftime(
-                        '%d.%m.%y %H:%M:%S'): f"| {type_operation} | {args[0]} | Account name: {args[1]}, Start balance: {args[3]} {currency[int(args[2])]}"
+                        '%d.%m.%y %H:%M:%S'): f"| {type_operation} | {args[0]} | Account name: {args[1]}, Start balance: {args[3]} {currency[int(args[2])]}\n"
                 }
             elif type_operation == "Registration":
                 data = {
-                    current_date.strftime('%d.%m.%y %H:%M:%S'): f"| {type_operation} | {args[0]} | Success: {result}"
+                    current_date.strftime('%d.%m.%y %H:%M:%S'): f"| {type_operation} | {args[0]} | Success: {result}\n"
                 }
             elif type_operation == "Login to system":
                 data = {
-                    current_date.strftime('%d.%m.%y %H:%M:%S'): f"| {type_operation} | Login: {args[0]}, Password: {args[0]} | Success: {result}!!!"
+                    current_date.strftime('%d.%m.%y %H:%M:%S'): f"| {type_operation} | Login: {args[0]}, Password: {args[1]} | Success: {result}!!!\n"
                 }
             elif type_operation == "Logout":
                 data = {
                     current_date.strftime(
-                        '%d.%m.%y %H:%M:%S'): f"| {type_operation} | Login: {args[0]} | Success!!!"
+                        '%d.%m.%y %H:%M:%S'): f"| {type_operation} | Login: {args[0]} | Success!!!\n"
                 }
 
             else:
