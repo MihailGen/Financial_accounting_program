@@ -1,6 +1,6 @@
 from functools import wraps
 from config.settings import Paths
-from config.settings import currency
+from utils.currency_converter import currency
 from utils.file_handler import read_json
 from utils.file_handler import write_json
 import os

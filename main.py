@@ -7,6 +7,10 @@ from services.account_management import account_from_file
 from services.account_management import create_account
 from services.authentication import login
 from services.authentication import logout
+from utils.currency_converter import converter
+from utils.currency_converter import converter_from_internet
+from utils.currency_converter import converter_from_cash
+
 
 print("******************************************")
 print("@@@@@  FINANCIAL ACCOUNTING PROGRAM  @@@@@")
@@ -126,7 +130,10 @@ while True:
         """
 
     elif choice == 6:
-        print("Thanks, goodbye!")
+        converter("rub", "eur", amount=100000)
+        # get_list_carrencyrates()
+        # converter_from_internet("rub", "usd", amount=1000)
+        # converter_from_cash("rub", "usd", amount=1000)
         break
 
     elif choice == 7:
