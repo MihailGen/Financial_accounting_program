@@ -3,17 +3,19 @@ from models.user import User
 from models.account import Account
 from models.transaction import Transaction
 from services.transaction_management import create_id_for_transaction
-from services.account_management import save_account_to_json
 from services.account_management import account_from_file
-from services.account_management import create_id_for_account
+from services.account_management import create_account
 from services.authentication import login
+from services.authentication import logout
+from utils.currency_converter import converter
+from utils.currency_converter import converter_from_internet
+from utils.currency_converter import converter_from_cash
+
 
 print("******************************************")
 print("@@@@@  FINANCIAL ACCOUNTING PROGRAM  @@@@@")
 print("******************************************")
 print("")
-
-# account_from_file ("mm", "1")
 
 username = ''
 
@@ -65,8 +67,7 @@ while True:
         name = input("Enter accounts name: ")
         currency = input("Enter the number of currency for your account\n 1 - Rub \n 2 - $ \n 3 - €\nYour choice: ")
         balance = float(input("Enter the balance in your account: "))
-        account = Account(create_id_for_account(login), username, name, currency, balance)
-        save_account_to_json(login, account)
+        create_account(username, name, currency, balance)
 
     # Create transaction
     elif choice == 3:
@@ -76,9 +77,9 @@ while True:
         # Запрашиваем у пользователя данные о транзакции
         account_id = input("Enter the account ID: ")
         amount = float(input("Enter the amount: "))
-        transaction_type = input("Enter the type of transaction\n1 - Adding income \n2 - expense registration: ")
+        transaction_type = input("Enter the type of transaction\n1 - Adding income \n2 - Expense registration: ")
         if transaction_type == "1":
-            transaction_type = "Incom"
+            transaction_type = "Income"
         elif transaction_type == "2":
             transaction_type = "Payment"
         else:
@@ -101,9 +102,9 @@ while True:
 
         # cоздаём объект account, на основе того, что вытащили, проводим операцию с балансом
         account = Account(account_id, username, name, currency, balance)
-        if transaction_type == "1":
+        if transaction_type == "Income":
             account.add_income(amount)
-        if transaction_type == "2":
+        if transaction_type == "Payment":
             account.add_expense(amount)
 
         # записываем операцию в JSON
@@ -129,7 +130,10 @@ while True:
         """
 
     elif choice == 6:
-        print("Thanks, goodbye!")
+        converter("rub", "eur", amount=100000)
+        # get_list_carrencyrates()
+        # converter_from_internet("rub", "usd", amount=1000)
+        # converter_from_cash("rub", "usd", amount=1000)
         break
 
     elif choice == 7:
@@ -141,8 +145,7 @@ while True:
         break
 
     elif choice == 9:
-        print("Thanks, goodbye!")
-        break
+        logout(username)
 
     elif choice == 10:
         print("Thanks, goodbye!")

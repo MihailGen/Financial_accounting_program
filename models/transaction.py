@@ -1,4 +1,4 @@
-from utils.logger import logger_transact
+from utils.logger import logger_for_classmethod
 from config.settings import Paths
 import os
 
@@ -18,7 +18,7 @@ class Transaction:
     # для записи транзакции в историю
 
     #@logger_log(self.date, "Transact. creation", self.username, self.transaction_type + ": account: " + self.self.account_id +" amount: " +self.amount + "descr: " + self.description )
-    @logger_transact("Transact. create")
+    @logger_for_classmethod("Transact. create")
     def record_transaction(self):
         data = {
             self.transaction_id: {

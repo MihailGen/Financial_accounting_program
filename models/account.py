@@ -1,6 +1,7 @@
 from utils.file_handler import read_json
+from utils.file_handler import write_json
 from config.settings import Paths
-from services.account_management import update_account_balance
+# from services.account_management import update_account_balance
 
 
 class Account:
@@ -15,7 +16,6 @@ class Account:
     # Добавление дохода
     def add_income(self, amount):
         self.balance += float(amount)
-        # print(self.username + self.account_id + self.balance + "<-add_expense")
         update_account_balance(self.username, self.account_id, self.balance)
 
 
@@ -36,3 +36,13 @@ class Account:
     # Осуществление перевода средств на другой счет
     def transfer(self, other_account, amount):
         pass
+
+def update_account_balance(username, account_id, balance):
+    print(f"update_account_balance{username, account_id, balance}")
+    # print('Start update_account_balance')
+    path = Paths.path_accounts(username)
+    # print(path)
+    data_tmp = read_json(path)
+    # print(data_tmp)
+    data_tmp[account_id]["balance"] = balance
+    write_json(path, data_tmp)
