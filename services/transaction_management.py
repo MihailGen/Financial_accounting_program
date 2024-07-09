@@ -2,7 +2,6 @@
 from utils.logger import logger_for_classmethod
 from config.settings import Paths
 import os
-
 from utils.file_handler import write_json, read_json
 
 import json
@@ -15,10 +14,12 @@ from config.settings import Paths
 def generate_report(account_id, start_date, end_date):
     username = "mm"
     path = Paths.path_transactions(username)
-    print(path)
-    # data_tmp = json.loads(path.read_text(encoding='utf-8'))
     data_tmp = json.loads(path.read_text(encoding='utf-8'))
-    print(str(data_tmp))
+    for name in data_tmp:
+        print(f"{name}: {data_tmp[name]['amount']}")
+    data_tmp_start_date = dict(filter(lambda data_tmp: data_tmp['date'] > start_date, data_tmp))
+    print(data_tmp_start_date)
+    return data_tmp_start_date
 
 
 # Addition a transaction
@@ -66,4 +67,4 @@ def create_id_for_transaction(login):
         return id_transactions
 
 
-generate_report(1, 1, 4)
+# generate_report(1, 1, 4)

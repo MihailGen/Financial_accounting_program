@@ -1,20 +1,15 @@
 import datetime
 import asyncio
-import multiprocessing
-from config.settings import Paths
 from models.user import User
 from models.account import Account
 from models.transaction import Transaction
 from services.transaction_management import create_id_for_transaction
+from services.transaction_management import generate_report
 from services.account_management import account_from_file
 from services.account_management import create_account
 from services.authentication import login
 from services.authentication import logout
-from utils.currency_converter import get_content
 from utils.currency_converter import converter
-from utils.currency_converter import converter_from_internet
-from utils.currency_converter import converter_from_cash
-from utils.currency_converter import list_currency_rates_to_file
 
 print("******************************************")
 print("@@@@@  FINANCIAL ACCOUNTING PROGRAM  @@@@@")
@@ -145,7 +140,16 @@ while True:
         break
 
     elif choice == 8:
-        print("Thanks, goodbye!")
+        account_id = 1
+        print('01.07.2024  08.07.2024')
+        try:
+            account_id = int(input("Enter the account ID: "))
+        except ValueError:
+            print("Not correct number, please try again")
+        dt_start = datetime.datetime.strptime(input('Enter the filtering start date'), '%d.%m.%Y')
+        dt_end = datetime.datetime.strptime(input('Enter the filtering start date'), '%d.%m.%Y')
+        dict = generate_report(account_id, dt_start, dt_end)
+        print(dict)
         break
 
     elif choice == 9:

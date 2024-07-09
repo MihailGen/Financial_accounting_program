@@ -6,6 +6,8 @@ import os
 import asyncio
 import aiohttp
 
+
+
 currency = ("Reserved", "rub", "usd", "eur", "kzt", "cny", "byn")
 
 
@@ -93,4 +95,5 @@ async def get_currency_list(path_to_service):
     for name in content:
         print(f"{name}: {content[name]['name']}")
 
-# asyncio.run(get_currency_list(Paths.service_path))
+
+#asyncio.run(get_currency_list(Paths.service_path))
