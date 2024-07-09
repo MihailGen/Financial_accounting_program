@@ -21,11 +21,9 @@ class Account:
 
     # Регистрация расхода
     def add_expense(self, amount):
-
         if float(amount) < self.balance:
             self.balance -= amount
             update_account_balance(self.username, self.account_id, self.balance)
-
         else:
             print('Insufficient funds')
 

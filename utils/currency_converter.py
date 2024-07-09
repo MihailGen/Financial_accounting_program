@@ -1,80 +1,71 @@
-import json
-from idlelib.iomenu import encoding
-
-import requests
 import datetime
 from config.settings import Paths
 from utils.file_handler import write_json
 from utils.file_handler import read_json
 import os
+import asyncio
+import aiohttp
 
-currency = ("Reserved", "rub", "usd", "eur", "kzt", "uan", "cny", "byn")
-api_path = "https://www.floatrates.com/daily/usd.json"
+currency = ("Reserved", "rub", "usd", "eur", "kzt", "cny", "byn")
 
 
-def converter(currenc, currency_to, amount=1):
+async def converter(currency_first, currency_two, amount):
     date_today = datetime.datetime.now().strftime('%d.%m.%y')
     print(date_today)
-    try:
-        data = read_json(Paths.exchange_rates)
-        if not data:
-            data = list_carrencyrates_to_file(api_path)
-    except:
-        list_carrencyrates_to_file(api_path)
-    print(data)
-    if date_today in data:
-        print("converter_from_cash")
-        converter_from_cash(currenc, currency_to, amount=1)
-    else:
+    data = read_json(Paths.exchange_rates)
+    if not data or not date_today in data:
         print("converter_from_internet")
-        converter_from_internet(currenc, currency_to, amount=1)
-        list_carrencyrates_to_file(api_path)
+        await converter_from_internet(currency_first, currency_two, amount)
+        await list_currency_rates_to_file(Paths.service_path)
+    else:
+        if data[date_today]:
+            print("converter_from_cash")
+            converter_from_cash(currency_first, currency_two, amount)
 
 
-def converter_from_internet(currency, currency_to, amount=1):
-    content = json.loads(requests.get(api_path).content)
-    if currency == "usd" or currency_to == "USD":
-        rate_currency_to = content[currency_to]["rate"]
+async def converter_from_internet(currency_first, currency_two, amount=1):
+    content = await get_content(Paths.service_path)
+    if currency_first == "usd" or currency_two == "USD":
+        rate_currency_to = content[currency_two]["rate"]
         result = round(amount * rate_currency_to, 2)
-    elif currency_to == "usd" or currency_to == "USD":
-        rate_currency = content[currency]["rate"]
+    elif currency_two == "usd" or currency_two == "USD":
+        rate_currency = content[currency_first]["rate"]
         result = round(amount / rate_currency, 2)
     else:
-        rate_currency = content[currency]["rate"]
-        rate_currency_to = content[currency_to]["rate"]
+        rate_currency = content[currency_first]["rate"]
+        rate_currency_to = content[currency_two]["rate"]
         result = round((amount / rate_currency) * rate_currency_to, 2)
     print(result)
     return result
 
 
-def converter_from_cash(currenc, currency_to, amount=1):
+def converter_from_cash(currency_first, currency_two, amount=1):
     date = datetime.datetime.now().strftime('%d.%m.%y')
     data = read_json(Paths.exchange_rates)
-    if currenc == "usd" or currency == "USD":
-        rate_currency_to = data[date][currency_to]["rate"]
+    if currency_first == "usd" or currency == "USD":
+        rate_currency_to = data[date][currency_two]["rate"]
         result = round(amount * rate_currency_to, 2)
-    elif currency_to == "usd" or currency_to == "USD":
-        rate_currency = data[date][currenc]["rate"]
+    elif currency_two == "usd" or currency_two == "USD":
+        rate_currency = data[date][currency_first]["rate"]
         result = round(amount / rate_currency, 2)
     else:
-        rate_currency = data[date][currenc]["rate"]
-        rate_currency_to = data[date][currency_to]["rate"]
+        rate_currency = data[date][currency_first]["rate"]
+        rate_currency_to = data[date][currency_two]["rate"]
         result = round((amount / rate_currency) * rate_currency_to, 2)
     print(result)
     return result
 
 
-async def list_carrencyrates_to_file(path_to_internet):
+async def list_currency_rates_to_file(path_to_service):
     path_to_file = Paths.exchange_rates
-    content = json.loads(requests.get(path_to_internet).content)
+    content = await get_content(path_to_service)
     data = {
         datetime.datetime.now().strftime('%d.%m.%y'): content
     }
     try:
         if not os.path.isfile(path_to_file):
-            with open(Paths.exchange_rates, "w", encoding="utf-8") as file:
+            with open(path_to_file, "w", encoding="utf-8") as file:
                 write_json(path_to_file, data)
-            # иначе - вытаскиваем из файла структуру, дополняем её и вновь записываем
         else:
             data_tmp = read_json(path_to_file)
             data_tmp.update(data)
@@ -82,8 +73,24 @@ async def list_carrencyrates_to_file(path_to_internet):
                 write_json(path_to_file, data_tmp)
             else:
                 write_json(path_to_file, data)
-        return content
+        return True
     except FileNotFoundError:
         return False
 
-# converter("rub", "eur", amount=100000)
+
+async def get_content(path_to_service):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(path_to_service) as response:
+            data = await response.json()
+    return data
+
+
+async def get_currency_list(path_to_service):
+    content = await get_content(path_to_service)
+    if not content:
+        print("internet")
+        content = await get_content(path_to_service)
+    for name in content:
+        print(f"{name}: {content[name]['name']}")
+
+# asyncio.run(get_currency_list(Paths.service_path))

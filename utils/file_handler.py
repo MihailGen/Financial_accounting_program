@@ -11,8 +11,8 @@ def read_json(path):
         if (os.stat(path).st_size == 0):
             return False
     except FileNotFoundError:
+        print("FileNotFoundError")
         return False
-
     try:
         return json.loads(path.read_text(encoding='utf-8'))
     except json.decoder.JSONDecodeError:

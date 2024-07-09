@@ -1,4 +1,7 @@
 import datetime
+import asyncio
+import multiprocessing
+from config.settings import Paths
 from models.user import User
 from models.account import Account
 from models.transaction import Transaction
@@ -7,10 +10,11 @@ from services.account_management import account_from_file
 from services.account_management import create_account
 from services.authentication import login
 from services.authentication import logout
+from utils.currency_converter import get_content
 from utils.currency_converter import converter
 from utils.currency_converter import converter_from_internet
 from utils.currency_converter import converter_from_cash
-
+from utils.currency_converter import list_currency_rates_to_file
 
 print("******************************************")
 print("@@@@@  FINANCIAL ACCOUNTING PROGRAM  @@@@@")
@@ -23,7 +27,7 @@ while username == '':
     log = input("Please enter your username: ")
     password = input("Please enter your password: ")
     if login(log, password):
-        username = login(log, password)
+        username = log
     else:
         print("\nLogin or password is wrong!\nWant to try again?\n")
         response = input("If Yes, print Y,\nif You want to register, print R,\nif Exit, print E: ")
@@ -49,10 +53,10 @@ while True:
     print("3. Create transaction")
     print("4. Display balance for account")
     print("5. Display total balance")
-    print("6. Exit")
-    print("7. Exit")
-    print("8. Exit")
-    print("9. Exit")
+    print("6. Get currency list")
+    print("7. User story")
+    print("8. Generate a report of Transactions")
+    print("9. Currency converter")
     print("10. Exit")
     print("11. Exit")
     choice = int(input("\nEnter your choice: "))
@@ -72,6 +76,7 @@ while True:
     # Create transaction
     elif choice == 3:
         # Генерируем ID для транзакции
+        print(username)
         transaction_id = create_id_for_transaction(username)
 
         # Запрашиваем у пользователя данные о транзакции
@@ -130,10 +135,9 @@ while True:
         """
 
     elif choice == 6:
-        converter("rub", "eur", amount=100000)
-        # get_list_carrencyrates()
-        # converter_from_internet("rub", "usd", amount=1000)
-        # converter_from_cash("rub", "usd", amount=1000)
+        # asyncio.run(get_content(Paths.service_path))
+        # asyncio.run(list_currency_rates_to_file(Paths.service_path))
+        asyncio.run(converter("kzt", "rub", 1000))
         break
 
     elif choice == 7:
@@ -183,11 +187,3 @@ while True:
     else:
         print("Wrong operation number, please try again!")
         print("")
-
-
-def main():
-    pass
-
-
-if __name__ == "__main__":
-    main()

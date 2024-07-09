@@ -1,8 +1,24 @@
 # Transaction management module
+from utils.logger import logger_for_classmethod
+from config.settings import Paths
+import os
+
+from utils.file_handler import write_json, read_json
+
+import json
 from models.transaction import Transaction
 from utils.file_handler import read_json
 from utils.file_handler import write_json
 from config.settings import Paths
+
+
+def generate_report(account_id, start_date, end_date):
+    username = "mm"
+    path = Paths.path_transactions(username)
+    print(path)
+    # data_tmp = json.loads(path.read_text(encoding='utf-8'))
+    data_tmp = json.loads(path.read_text(encoding='utf-8'))
+    print(str(data_tmp))
 
 
 # Addition a transaction
@@ -41,9 +57,13 @@ def get_transactions(account_id, start_date, end_date):
 
 def create_id_for_transaction(login):
     path = Paths.path_transactions(login)
+    print(path)
     data_tmp = read_json(path)
     if not data_tmp:
         return 1
     else:
         id_transactions = len(data_tmp) + 1
         return id_transactions
+
+
+generate_report(1, 1, 4)
