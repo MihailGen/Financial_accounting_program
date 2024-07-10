@@ -32,6 +32,7 @@ class Constants_and_variables:
     date_start = ''
     date_end = ''
     account_id = ''
+    currency = ("Reserved", "rub", "usd", "eur", "kzt", "cny", "byn")
 
 
 

@@ -12,9 +12,10 @@ from services.authentication import logout
 from utils.currency_converter import converter
 
 print("******************************************")
+print("              @@@@@")
 print("@@@@@  FINANCIAL ACCOUNTING PROGRAM  @@@@@")
+print("              @@@@@")
 print("******************************************")
-print("")
 
 username = ''
 
@@ -142,21 +143,26 @@ while True:
     elif choice == 8:
         account_id = 1
         trans_type = 'Payment'
-        """
+        """""
         print('01.07.2024  08.07.2024')
         try:
             account_id = int(input("Enter the account ID: "))
         except ValueError:
             print("Not correct number, please try again")
         try:
-            dt_start = datetime.datetime.strptime(input('Enter the filtering start date in format: dd.mm.yyyy'), '%d.%m.%Y')
-            dt_end = datetime.datetime.strptime(input('Enter the filtering end date in format: dd.mm.yyyy'), '%d.%m.%Y')
+            dt_start = input('Enter the filtering start date in format: dd.mm.yyyy: ')
+            dt_end = input('Enter the filtering end date in format: dd.mm.yyyy: ')
         except:
-            print(f"Incorrect date format!\nPlease enter the date in the following format: {datetime.datetime.now().strftime('%d.%m.%y')}")
-        """
-
-        dict = generate_report(username, 1, '03.07.2024', '08.07.2024', trans_type)
-        print(dict)
+            print(
+                f"Incorrect date format!\nPlease enter the date in the following format: {datetime.datetime.now().strftime('%d.%m.%y')}")
+        try:
+            trans_type = int(input("Enter the type of transaction: \n"
+                                   "1 - Income, 2 - Payment, 3 - Expense, 4 - Transfer "))
+        except ValueError:
+            print("Not correct number, please try again")
+"""""
+        # generate_report(username, account_id, dt_start, dt_end, trans_type)
+        dict = generate_report(username, 1, '03.07.2024', '08.07.2024', trans_type )
         break
 
     elif choice == 9:
