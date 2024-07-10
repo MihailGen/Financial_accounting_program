@@ -11,6 +11,9 @@ class Paths:
     logs_json = Path("data/logs/logs.json")
     exchange_rates = Path("data/exchange_rates.json")
     service_path = "https://www.floatrates.com/daily/usd.json"
+    date_start = ''
+    date_end = ''
+    account_id =''
 
     @classmethod
     def path_accounts(self, login):
@@ -21,6 +24,16 @@ class Paths:
     def path_transactions(self, login):
         str_for_path = "data/transactions/" + login + "_transactions.json"
         return Path(str_for_path)
+
+@dataclass
+class Constants_and_variables:
+    trans_type = ('Income', 'Payment')
+    trans_type_account = ''
+    date_start = ''
+    date_end = ''
+    account_id = ''
+
+
 
 
 CONST_FOR_HASH = 68429

@@ -91,7 +91,7 @@ while True:
 
         # Запрашиваем у пользователя данные о транзакции
         transaction = Transaction(transaction_id, username, account_id, amount, transaction_type, description,
-                                  current_date.strftime('%d.%m.%y %H:%M:%S'))
+                                  current_date.strftime('%d.%m.%Y %H:%M:%S'))
 
         # Вытаскиваем из файла данные о счёте хитрым способом
         data = account_from_file(username, account_id)
@@ -141,14 +141,21 @@ while True:
 
     elif choice == 8:
         account_id = 1
+        trans_type = 'Payment'
+        """
         print('01.07.2024  08.07.2024')
         try:
             account_id = int(input("Enter the account ID: "))
         except ValueError:
             print("Not correct number, please try again")
-        dt_start = datetime.datetime.strptime(input('Enter the filtering start date'), '%d.%m.%Y')
-        dt_end = datetime.datetime.strptime(input('Enter the filtering start date'), '%d.%m.%Y')
-        dict = generate_report(account_id, dt_start, dt_end)
+        try:
+            dt_start = datetime.datetime.strptime(input('Enter the filtering start date in format: dd.mm.yyyy'), '%d.%m.%Y')
+            dt_end = datetime.datetime.strptime(input('Enter the filtering end date in format: dd.mm.yyyy'), '%d.%m.%Y')
+        except:
+            print(f"Incorrect date format!\nPlease enter the date in the following format: {datetime.datetime.now().strftime('%d.%m.%y')}")
+        """
+
+        dict = generate_report(username, 1, '03.07.2024', '08.07.2024', trans_type)
         print(dict)
         break
 

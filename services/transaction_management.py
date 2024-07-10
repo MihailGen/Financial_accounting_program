@@ -3,23 +3,58 @@ from utils.logger import logger_for_classmethod
 from config.settings import Paths
 import os
 from utils.file_handler import write_json, read_json
-
+from datetime import datetime
+import datetime
 import json
 from models.transaction import Transaction
 from utils.file_handler import read_json
 from utils.file_handler import write_json
 from config.settings import Paths
+from config.settings import Constants_and_variables
 
 
-def generate_report(account_id, start_date, end_date):
-    username = "mm"
+def filtering_fnc(data_tmp: dict):
+    print('@@@@')
+    print(data_tmp)
+    key, value = data_tmp
+    print(value['date'][0:10])
+    print((datetime.datetime.strptime(Constants_and_variables.date_start, '%d.%m.%Y')).strftime('%d.%m.%Y'))
+    print((datetime.datetime.strptime(Constants_and_variables.date_end, '%d.%m.%Y')).strftime('%d.%m.%Y'))
+
+
+    if str(value['account_id']) != str(Constants_and_variables.account_id):  # first condition
+        return False
+
+    if str(value['transaction_type']) != str(Constants_and_variables.trans_type_account):  # second condition
+        return False
+
+    if value['date'][0:10] < (datetime.datetime.strptime(Constants_and_variables.date_start, '%d.%m.%Y')).strftime(
+            '%d.%m.%Y') or value['date'][0:10] > (
+    datetime.datetime.strptime(Constants_and_variables.date_end, '%d.%m.%Y')).strftime('%d.%m.%Y'):  # third condition
+        return False
+
+    return True
+
+
+def generate_report(username, account_id, start_date, end_date, trans_type):
+
+    accounts_tmp = read_json(Paths.path_accounts(username))
+    bank_name = accounts_tmp[str(account_id)]["name"]
+    currency_name = accounts_tmp[str(account_id)]["currency"]
+    print(bank_name)
+    Constants_and_variables.date_start = start_date
+    Constants_and_variables.date_end = end_date
+    Constants_and_variables.account_id = account_id
+    Constants_and_variables.trans_type_account = trans_type
     path = Paths.path_transactions(username)
     data_tmp = json.loads(path.read_text(encoding='utf-8'))
-    for name in data_tmp:
-        print(f"{name}: {data_tmp[name]['amount']}")
-    data_tmp_start_date = dict(filter(lambda data_tmp: data_tmp['date'] > start_date, data_tmp))
-    print(data_tmp_start_date)
-    return data_tmp_start_date
+    # for name in data_tmp:
+    #     print(f"{name}: {data_tmp[name]['amount']}")
+    data_tmp_filtered = dict(filter(filtering_fnc, data_tmp.items()))
+    for data in data_tmp_filtered:
+        print(f"{bank_name}, {data['amount']}, {currency_name}, {data['transaction_type']}, {data['description']}, {data['date']}")
+    print(data_tmp_filtered)
+    return data_tmp_filtered
 
 
 # Addition a transaction
@@ -66,5 +101,5 @@ def create_id_for_transaction(login):
         id_transactions = len(data_tmp) + 1
         return id_transactions
 
-
 # generate_report(1, 1, 4)
+# generate_report(1, datetime.datetime.strptime('01.07.2024', '%d.%m.%Y') , datetime.datetime.strptime('08.07.2024', '%d.%m.%Y'))
