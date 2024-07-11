@@ -4,24 +4,27 @@ from models.user import User
 from models.account import Account
 from models.transaction import Transaction
 from services.transaction_management import create_id_for_transaction
-from services.transaction_management import generate_report
+from services.transaction_management import generate_report_user_story_6
+from services.transaction_management import generate_report_user_story_7
 from services.account_management import account_from_file
 from services.account_management import create_account
 from services.authentication import login
 from services.authentication import logout
 from utils.currency_converter import converter
-
-print("******************************************")
-print("              @@@@@")
-print("@@@@@  FINANCIAL ACCOUNTING PROGRAM  @@@@@")
-print("              @@@@@")
-print("******************************************")
+from config.settings import Constants_and_variables
+import re
+print("\n")
+# print("*****************************************")
+print("₽₽₽-----***------$$$$$------***---------₽₽₽")
+print("€€€€€---FINANCIAL ACCOUNTING PROGRAM---€€€€")
+print("₽₽₽-----***------$$$$$------***---------₽₽₽")
+print("\n")
 
 username = ''
 
 while username == '':
-    log = input("Please enter your username: ")
-    password = input("Please enter your password: ")
+    log = input("Username: ")
+    password = input("Password: ")
     if login(log, password):
         username = log
     else:
@@ -32,7 +35,11 @@ while username == '':
             name = input("Enter your name: ")
             surname = input("Enter your surname: ")
             login = name + surname
+
+
             email = input("Enter your email: ")
+            email_regex = re.compile((r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"))
+
             password = input("Enter your password: ")
             user = User(login, password, email)
             user.register()
@@ -49,10 +56,10 @@ while True:
     print("3. Create transaction")
     print("4. Display balance for account")
     print("5. Display total balance")
-    print("6. Get currency list")
-    print("7. User story")
-    print("8. Generate a report of Transactions")
-    print("9. Currency converter")
+    print("6. Report user story 6")
+    print("7. Report user story 7")
+    print("8. Currency converter")
+    print("9. Logout")
     print("10. Exit")
     print("11. Exit")
     choice = int(input("\nEnter your choice: "))
@@ -131,42 +138,67 @@ while True:
         """
 
     elif choice == 6:
+        try:
+            account_id = int(input("Enter the account ID: "))
+        except ValueError:
+            print("Not correct number, please try again")
+        while True:
+            try:
+                dt_start = input(f'Enter the filtering start date in format "dd.mm.yyyy": ')
+                except_generator = datetime.datetime.strptime(dt_start, "%d.%m.%Y")
+                dt_end = input(f'Enter the filtering end date in format "dd.mm.yyyy": ')
+                except_generator = datetime.datetime.strptime(dt_end, "%d.%m.%Y")
+                break
+            except:
+                print(
+                    f"Incorrect date format!\nPlease enter the date in the following format: {datetime.datetime.now().strftime('%d.%m.%Y')}")
+        while True:
+            try:
+                trans_type = int(input("Enter the type of transaction: \n"
+                                       "1 - Income, 2 - Payment: "))
+                trans_type = Constants_and_variables.trans_type[trans_type - 1]
+                break
+            except ValueError:
+                print("Not correct number, please try again")
+        print(username, 1, str(dt_start), str(dt_end), trans_type)
+        generate_report_user_story_6(username, account_id, str(dt_start), str(dt_end), trans_type)
+        break
+
+
+    elif choice == 7:
+        '''
+        try:
+            account_id = int(input("Enter the account ID: "))
+        except ValueError:
+            print("Not correct number, please try again")
+        while True:
+            try:
+                dt_start = input(f'Enter the filtering start date in format "dd.mm.yyyy": ')
+                except_generator = datetime.datetime.strptime(dt_start, "%d.%m.%Y")
+                dt_end = input(f'Enter the filtering end date in format "dd.mm.yyyy": ')
+                except_generator = datetime.datetime.strptime(dt_end, "%d.%m.%Y")
+                break
+            except:
+                print(
+                    f"Incorrect date format!\nPlease enter the date in the following format: {datetime.datetime.now().strftime('%d.%m.%Y')}")
+        print(username, 1, str(dt_start), str(dt_end))
+        generate_report_user_story_7(username, account_id, str(dt_start), str(dt_end))
+        '''
+        generate_report_user_story_7('mm','1', '01.07.2024', '01.07.2024')
+
+
+        break
+
+    elif choice == 8:
         # asyncio.run(get_content(Paths.service_path))
         # asyncio.run(list_currency_rates_to_file(Paths.service_path))
         asyncio.run(converter("kzt", "rub", 1000))
         break
 
-    elif choice == 7:
-        print("Thanks, goodbye!")
-        break
-
-    elif choice == 8:
-        account_id = 1
-        trans_type = 'Payment'
-        """""
-        print('01.07.2024  08.07.2024')
-        try:
-            account_id = int(input("Enter the account ID: "))
-        except ValueError:
-            print("Not correct number, please try again")
-        try:
-            dt_start = input('Enter the filtering start date in format: dd.mm.yyyy: ')
-            dt_end = input('Enter the filtering end date in format: dd.mm.yyyy: ')
-        except:
-            print(
-                f"Incorrect date format!\nPlease enter the date in the following format: {datetime.datetime.now().strftime('%d.%m.%y')}")
-        try:
-            trans_type = int(input("Enter the type of transaction: \n"
-                                   "1 - Income, 2 - Payment, 3 - Expense, 4 - Transfer "))
-        except ValueError:
-            print("Not correct number, please try again")
-"""""
-        # generate_report(username, account_id, dt_start, dt_end, trans_type)
-        dict = generate_report(username, 1, '03.07.2024', '08.07.2024', trans_type )
-        break
 
     elif choice == 9:
         logout(username)
+        break
 
     elif choice == 10:
         print("Thanks, goodbye!")
@@ -193,10 +225,6 @@ while True:
         break
 
     elif choice == 16:
-        print("Thanks, goodbye!")
-        break
-
-    elif choice == 17:
         print("Thanks, goodbye!")
         break
 

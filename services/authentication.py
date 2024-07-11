@@ -13,7 +13,6 @@ from utils.logger import logger_events
 def login(login, password):
     data_tmp = read_json(Paths.users_json)
     if login in data_tmp:
-        print(login)
         if (data_tmp[login][0] == hash_funct(password)):
             print("Password is correct")
         result = True

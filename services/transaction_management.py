@@ -11,8 +11,10 @@ from utils.file_handler import read_json
 from utils.file_handler import write_json
 from config.settings import Paths
 from config.settings import Constants_and_variables
+from functools import reduce
 
 
+# Inner function for filter function
 def filtering_fnc(data_tmp: dict):
     key, value = data_tmp
     if str(value['account_id']) != str(Constants_and_variables.account_id):  # first condition
@@ -30,24 +32,85 @@ def filtering_fnc(data_tmp: dict):
     return True
 
 
-def generate_report(username, account_id, start_date, end_date, trans_type):
+# Main function for filter
+def generate_report_user_story_6(username, account_id, start_date, end_date, trans_type):
     accounts_tmp = read_json(Paths.path_accounts(username))
-    bank_name = accounts_tmp[str(account_id)]["name"]
+    try:
+        bank_name = accounts_tmp[str(account_id)]["name"]
+    except:
+        print("The account not exist!")
     currency_name = accounts_tmp[str(account_id)]["currency"]
-    print(bank_name, currency_name)
     Constants_and_variables.date_start = start_date
     Constants_and_variables.date_end = end_date
     Constants_and_variables.account_id = account_id
     Constants_and_variables.trans_type_account = trans_type
     path = Paths.path_transactions(username)
     data_tmp = json.loads(path.read_text(encoding='utf-8'))
+    # Calling function for filter function
     data_tmp_filtered = dict(filter(filtering_fnc, data_tmp.items()))
+    # Printing filtered transactions list
     for data in data_tmp_filtered:
         print(
             f"ID:{data}, account name: {bank_name}, amount: {data_tmp_filtered[data]['amount']}{Constants_and_variables.currency[int(currency_name)]}, "
             f"type: {data_tmp_filtered[data]['transaction_type']}, description: {data_tmp_filtered[data]['description']}, "
             f"{data_tmp_filtered[data]['date']}")
-    # return data_tmp_filtered
+
+
+# Inner function for reduce function
+def reduce_fnc(data_tmp: dict):
+    total_income = 0
+    total_expense = 0
+    key, value = data_tmp
+
+    if str(value['account_id']) != str(Constants_and_variables.account_id):  # first condition
+        return False
+
+    if value['date'][0:10] < (datetime.datetime.strptime(Constants_and_variables.date_start, '%d.%m.%Y')).strftime(
+            '%d.%m.%Y') or value['date'][0:10] > (
+            datetime.datetime.strptime(Constants_and_variables.date_end, '%d.%m.%Y')).strftime(
+        '%d.%m.%Y'):  # third condition
+        return False
+
+    if str(value['transaction_type']) == "Income":  # second condition
+        total_income += float(value['amount'])
+    if str(value['transaction_type']) == "Payment":  # second condition
+        total_expense += float(value['amount'])
+
+    print(total_income + " " + total_expense)
+
+    return (total_income, total_expense)
+
+
+def generate_report_user_story_7(username, account_id, start_date, end_date):
+    accounts_tmp = read_json(Paths.path_accounts(username))
+    try:
+        bank_name = accounts_tmp[str(account_id)]["name"]
+    except:
+        print("The account not exist!")
+    currency_name = accounts_tmp[str(account_id)]["currency"]
+    Constants_and_variables.date_start = start_date
+    Constants_and_variables.date_end = end_date
+    Constants_and_variables.account_id = account_id
+    Constants_and_variables.trans_type_account = 'Income'
+    path = Paths.path_transactions(username)
+    data_tmp = json.loads(path.read_text(encoding='utf-8'))
+
+    data_tmp_Income = dict(filter(filtering_fnc, data_tmp.items()))
+    Constants_and_variables.trans_type_account = 'Payment'
+    data_tmp_Payment = dict(filter(filtering_fnc, data_tmp.items()))
+
+
+    # Calling function for reduce function
+    # total_income = reduce(lambda a, b: a+b, data_tmp.items())
+    total_income = reduce(lambda x, y: x + y,  data_tmp.items())
+    print(total_income)
+
+    # Printing filtered transactions list
+    # for data in data_tmp_filtered:
+    #     print(
+    #         f"ID:{data}, account name: {bank_name}, amount: {data_tmp_filtered[data]['amount']}{Constants_and_variables.currency[int(currency_name)]}, "
+    #         f"type: {data_tmp_filtered[data]['transaction_type']}, description: {data_tmp_filtered[data]['description']}, "
+    #         f"{data_tmp_filtered[data]['date']}")
 
 
 # Addition a transaction
