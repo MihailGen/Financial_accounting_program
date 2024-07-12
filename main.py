@@ -9,29 +9,30 @@ from services.transaction_management import generate_report_user_story_7
 from services.account_management import account_from_file
 from services.account_management import create_account
 from services.account_management import isValid
-from services.authentication import login
-from services.authentication import logout
+from services.authentication import login_fnc
+from services.authentication import logout_fnc
+from services.authentication import update_user_information
 from utils.currency_converter import converter
 from config.settings import Constants_and_variables
 
 print("\n")
 # print("*****************************************")
 print("₽₽₽-----***------$$$$$------***---------₽₽₽")
-print("€€€€€---FINANCIAL ACCOUNTING PROGRAM---€€€€")
+print("€€€€€   FINANCIAL ACCOUNTING PROGRAM   €€€€")
 print("₽₽₽-----***------$$$$$------***---------₽₽₽")
 print("\n")
 
 username = ''
 
-while username == '':
+while not username:
     log = input("Username: ")
     password = input("Password: ")
-    if login(log, password):
+    if login_fnc(log, password):
         username = log
     else:
         print("\nLogin or password is wrong!\nWant to try again?\n")
-        response = input("If Yes, print Y,\nif You want to register, print R,\nif Exit, print E: ")
-        if (response == "R" or response == "r"):
+        response = input("If yes, print Y,\nif You want to register, print R,\nif Exit, print any another key: ")
+        if response == "R" or response == "r":
             print("Please register\n")
             name = input("Enter your name: ")
             surname = input("Enter your surname: ")
@@ -47,7 +48,7 @@ while username == '':
             user.register()
             print("")
             username = login
-        if (response == "E" or response == "e"):
+        elif response not in ("Y", "y", "Yes", "yes"):
             print("Thanks, goodbye!")
             exit()
 
@@ -68,7 +69,15 @@ while True:
 
     # Update_profile
     if choice == 1:
-        pass
+        password = input("Enter new password: ")
+        while True:
+            email = input("Enter new email: ")
+            if not isValid(email):
+                print("\nInvalid email forma!\n")
+            else:
+                break
+        update_user_information(username, password, email)
+
 
     # Create account
     elif choice == 2:
@@ -99,7 +108,7 @@ while True:
         description = input("Write a description of transaction: ")
         current_date = datetime.datetime.now()
 
-        # Запрашиваем у пользователя данные о транзакции
+        # Создаём объект
         transaction = Transaction(transaction_id, username, account_id, amount, transaction_type, description,
                                   current_date.strftime('%d.%m.%Y %H:%M:%S'))
 
@@ -123,7 +132,8 @@ while True:
 
     # Display balance for account
     elif choice == 4:
-        pass
+        print("Thanks, goodbye!")
+        break
 
     # Exit
     elif choice == 5:
@@ -168,9 +178,9 @@ while True:
 
 
     elif choice == 7:
-        '''
+
         try:
-            account_id = int(input("Enter the account ID: "))
+            account_id = input("Enter the account ID: ")
         except ValueError:
             print("Not correct number, please try again")
         while True:
@@ -183,12 +193,8 @@ while True:
             except:
                 print(
                     f"Incorrect date format!\nPlease enter the date in the following format: {datetime.datetime.now().strftime('%d.%m.%Y')}")
-        print(username, 1, str(dt_start), str(dt_end))
+
         generate_report_user_story_7(username, account_id, str(dt_start), str(dt_end))
-        '''
-
-        generate_report_user_story_7('mm','1', '01.07.2024', '10.07.2024')
-
 
         break
 
@@ -200,7 +206,7 @@ while True:
 
 
     elif choice == 9:
-        logout(username)
+        logout_fnc(username)
         break
 
     elif choice == 10:

@@ -84,7 +84,6 @@ def reduce_fnc(data_tmp: dict):
 
 
 def generate_report_user_story_7(username, account_id, start_date, end_date):
-    total_list = []
     total_income_list = []
     total_expense_list = []
     accounts_tmp = read_json(Paths.path_accounts(username))
@@ -92,41 +91,38 @@ def generate_report_user_story_7(username, account_id, start_date, end_date):
         bank_name = accounts_tmp[str(account_id)]["name"]
     except:
         print("The account not exist!")
-    currency_name = accounts_tmp[str(account_id)]["currency"]
+    currency_name = Constants_and_variables.currency[int(accounts_tmp[str(account_id)]["currency"])]
     Constants_and_variables.date_start = start_date
     Constants_and_variables.date_end = end_date
     Constants_and_variables.account_id = account_id
-    Constants_and_variables.trans_type_account = 'Income'
+    # Constants_and_variables.trans_type_account = 'Income'
     path = Paths.path_transactions(username)
     data_tmp = json.loads(path.read_text(encoding='utf-8'))
-    print("!")
-    print(data_tmp)
-
-    data_tmp_Income = dict(filter(filtering_fnc, data_tmp.items()))
-    Constants_and_variables.trans_type_account = 'Payment'
-    data_tmp_Payment = dict(filter(filtering_fnc, data_tmp.items()))
-    print("!!!")
-    print(data_tmp_Payment)
-    for key, value in data_tmp_Payment.items():
+    # Constants_and_variables.trans_type_account = 'Payment'
+    data_tmp_filtered = dict(filter(filtering_fnc, data_tmp.items()))
+    for key, value in data_tmp_filtered.items():
         if str(value['transaction_type']) == 'Income':
             # total_list.append(value['amount'])
             total_income_list.append(value['amount'])
         else:
-            total_expense_list.append(value['amount'] * -1)
+            total_expense_list.append(value['amount'])
 
-    total_list = total_income_list + total_expense_list
+    # Calling reduce function
+    if total_income_list:
+        total_income = reduce(lambda x, y: x + y, total_income_list)
+    else:
+        total_income = 0
+    if total_expense_list:
+        total_expense = reduce(lambda x, y: x + y, total_expense_list)
+    else:
+        total_expense = 0
 
-    # Calling function for reduce function
-    # total_income_list = reduce(lambda a, b: a+b, data_tmp.items())
-    total_report = reduce(lambda x, y: x + y, total_list)
-    print('total_report', total_report)
-
-    # Printing filtered transactions list
-    # for data in data_tmp_filtered:
-    #     print(
-    #         f"ID:{data}, account name: {bank_name}, amount: {data_tmp_filtered[data]['amount']}{Constants_and_variables.currency[int(currency_name)]}, "
-    #         f"type: {data_tmp_filtered[data]['transaction_type']}, description: {data_tmp_filtered[data]['description']}, "
-    #         f"{data_tmp_filtered[data]['date']}")
+    report = (
+        f"Общий доход: {total_income} {currency_name}\n"
+        f"Общий расход: {total_expense} {currency_name}\n"
+        f"Конечный баланс: {total_income-total_expense} {currency_name}\n"
+    )
+    print(report)
 
 
 # Addition a transaction
@@ -172,6 +168,3 @@ def create_id_for_transaction(login):
     else:
         id_transactions = len(data_tmp) + 1
         return id_transactions
-
-# generate_report(1, 1, 4)
-# generate_report(1, datetime.datetime.strptime('01.07.2024', '%d.%m.%Y') , datetime.datetime.strptime('08.07.2024', '%d.%m.%Y'))

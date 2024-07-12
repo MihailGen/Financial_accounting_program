@@ -7,7 +7,7 @@ from utils.file_handler import write_json, read_json
 
 class Transaction:
 
-    def __init__(self,  transaction_id, username,  account_id, amount, transaction_type, description, date):
+    def __init__(self, transaction_id, username, account_id, amount, transaction_type, description, date):
         self.transaction_id = transaction_id
         self.username = username
         self.account_id = account_id
@@ -15,14 +15,13 @@ class Transaction:
         self.transaction_type = transaction_type
         self.description = description
         self.date = date
-    # для записи транзакции в историю
 
-    #@logger_log(self.date, "Transact. creation", self.username, self.transaction_type + ": account: " + self.self.account_id +" amount: " +self.amount + "descr: " + self.description )
-    @logger_for_classmethod("Transact. create")
+    # для записи транзакции в историю
+    @logger_for_classmethod("Write transaction to history")
     def record_transaction(self):
         data = {
             self.transaction_id: {
-                "username":  self.username,
+                "username": self.username,
                 "account_id": self.account_id,
                 "amount": self.amount,
                 "transaction_type": self.transaction_type,
@@ -32,7 +31,6 @@ class Transaction:
         }
         path = Paths.path_transactions(self.username)
         # если файла не существует, записываем в него данные сразу
-        #print(path)
         try:
             if not os.path.isfile(path):
                 with open(path, "w", encoding="utf-8") as file:

@@ -19,7 +19,7 @@ class User:
 
     # для входа в систему
     def login(self):
-        authentication.login(self.username, self.password)
+        authentication.login_fnc(self.username, self.password)
 
     # для обновления профиля пользователя
     def update_profile(self):

@@ -17,6 +17,7 @@ class Account:
     def add_income(self, amount):
         self.balance += float(amount)
         update_account_balance(self.username, self.account_id, self.balance)
+        return self.balance
 
 
     # Регистрация расхода
@@ -26,6 +27,7 @@ class Account:
             update_account_balance(self.username, self.account_id, self.balance)
         else:
             print('Insufficient funds')
+        return self.balance
 
     # Получение текущего баланса
     def get_balance(self):
@@ -37,10 +39,7 @@ class Account:
 
 def update_account_balance(username, account_id, balance):
     print(f"update_account_balance{username, account_id, balance}")
-    # print('Start update_account_balance')
     path = Paths.path_accounts(username)
-    # print(path)
     data_tmp = read_json(path)
-    # print(data_tmp)
     data_tmp[account_id]["balance"] = balance
     write_json(path, data_tmp)
