@@ -3,10 +3,8 @@ from utils.file_handler import read_json
 from utils.file_handler import write_json
 from config.settings import Paths
 from utils.logger import logger_events
-from pathlib import Path
-
+import re
 import os
-import json
 
 
 # Управление счетами пользователей
@@ -57,6 +55,15 @@ def account_from_file(username, account_id):
 def update_account(account_id, name, currency, balance):
     pass
 
+
+def isValid(email):
+    regex = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
+    if re.fullmatch(regex, email):
+        print("Valid email")
+        return True
+    else:
+        print("Invalid email")
+        return False
 
 # rewrite balance
 def update_account_balance(username, account_id, balance):

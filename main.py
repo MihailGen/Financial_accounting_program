@@ -8,11 +8,12 @@ from services.transaction_management import generate_report_user_story_6
 from services.transaction_management import generate_report_user_story_7
 from services.account_management import account_from_file
 from services.account_management import create_account
+from services.account_management import isValid
 from services.authentication import login
 from services.authentication import logout
 from utils.currency_converter import converter
 from config.settings import Constants_and_variables
-import re
+
 print("\n")
 # print("*****************************************")
 print("₽₽₽-----***------$$$$$------***---------₽₽₽")
@@ -35,11 +36,12 @@ while username == '':
             name = input("Enter your name: ")
             surname = input("Enter your surname: ")
             login = name + surname
-
-
-            email = input("Enter your email: ")
-            email_regex = re.compile((r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"))
-
+            while True:
+                email = input("Enter your email: ")
+                if not isValid(email):
+                    print("\nEmail is invalid!\n")
+                else:
+                    break
             password = input("Enter your password: ")
             user = User(login, password, email)
             user.register()
@@ -184,7 +186,8 @@ while True:
         print(username, 1, str(dt_start), str(dt_end))
         generate_report_user_story_7(username, account_id, str(dt_start), str(dt_end))
         '''
-        generate_report_user_story_7('mm','1', '01.07.2024', '01.07.2024')
+
+        generate_report_user_story_7('mm','1', '01.07.2024', '10.07.2024')
 
 
         break

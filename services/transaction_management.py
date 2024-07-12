@@ -20,7 +20,9 @@ def filtering_fnc(data_tmp: dict):
     if str(value['account_id']) != str(Constants_and_variables.account_id):  # first condition
         return False
 
-    if str(value['transaction_type']) != str(Constants_and_variables.trans_type_account):  # second condition
+    # if not Constants_and_variables.trans_type_account:
+    #     return True
+    if str(value['transaction_type']) != str(Constants_and_variables.trans_type_account) and Constants_and_variables.trans_type_account:  # second condition
         return False
 
     if value['date'][0:10] < (datetime.datetime.strptime(Constants_and_variables.date_start, '%d.%m.%Y')).strftime(
@@ -82,6 +84,9 @@ def reduce_fnc(data_tmp: dict):
 
 
 def generate_report_user_story_7(username, account_id, start_date, end_date):
+    total_list = []
+    total_income_list = []
+    total_expense_list = []
     accounts_tmp = read_json(Paths.path_accounts(username))
     try:
         bank_name = accounts_tmp[str(account_id)]["name"]
@@ -94,16 +99,27 @@ def generate_report_user_story_7(username, account_id, start_date, end_date):
     Constants_and_variables.trans_type_account = 'Income'
     path = Paths.path_transactions(username)
     data_tmp = json.loads(path.read_text(encoding='utf-8'))
+    print("!")
+    print(data_tmp)
 
     data_tmp_Income = dict(filter(filtering_fnc, data_tmp.items()))
     Constants_and_variables.trans_type_account = 'Payment'
     data_tmp_Payment = dict(filter(filtering_fnc, data_tmp.items()))
+    print("!!!")
+    print(data_tmp_Payment)
+    for key, value in data_tmp_Payment.items():
+        if str(value['transaction_type']) == 'Income':
+            # total_list.append(value['amount'])
+            total_income_list.append(value['amount'])
+        else:
+            total_expense_list.append(value['amount'] * -1)
 
+    total_list = total_income_list + total_expense_list
 
     # Calling function for reduce function
-    # total_income = reduce(lambda a, b: a+b, data_tmp.items())
-    total_income = reduce(lambda x, y: x + y,  data_tmp.items())
-    print(total_income)
+    # total_income_list = reduce(lambda a, b: a+b, data_tmp.items())
+    total_report = reduce(lambda x, y: x + y, total_list)
+    print('total_report', total_report)
 
     # Printing filtered transactions list
     # for data in data_tmp_filtered:
