@@ -28,7 +28,6 @@ def save_account_to_json(login, account):
     }
     path = Paths.path_accounts(login)
     # если файла не существует, записываем в него данные сразу
-    print(path)
     try:
         if not os.path.isfile(path):
             with open(path, "w", encoding="utf-8") as file:
@@ -46,9 +45,7 @@ def save_account_to_json(login, account):
 
 
 def account_from_file(username, account_id):
-    # print(Paths.path_accounts(username))
     data_tmp = read_json(Paths.path_accounts(username))
-    # print(data_tmp[account_id])
     return data_tmp[account_id]
 
 
@@ -65,13 +62,11 @@ def isValid(email):
         print("Invalid email")
         return False
 
+
 # rewrite balance
 def update_account_balance(username, account_id, balance):
-    # print('Start update_account_balance')
     path = Paths.path_accounts(username)
-    # print(path)
     data_tmp = read_json(path)
-    # print(data_tmp)
     data_tmp[account_id]["balance"] = balance
     write_json(path, data_tmp)
 
@@ -85,3 +80,54 @@ def create_id_for_account(login):
     else:
         id_account = len(data_tmp) + 1
         return id_account
+
+
+def check_if_account_exists(id, login):
+    path = Paths.path_accounts(login)
+    data_tmp = read_json(path)
+    if not data_tmp:
+        return False
+    else:
+        try:
+            if data_tmp[str(id)]:
+                return True
+        except:
+            return False
+
+
+def account_proof(username):
+    while True:
+        try:
+            while True:
+                account_id = int(input("Enter the account ID: "))
+                if not check_if_account_exists(str(account_id), username):
+                    print(f"Account with ID {account_id} not exist")
+                else:
+                    break
+            break
+        except ValueError:
+            print("Not correct number, please try again")
+    return account_id
+
+
+def create_account_object_from_json(login, account_id):
+    path = Paths.path_accounts(login)
+    data_tmp = read_json(path)
+    print(data_tmp)
+    if not data_tmp:
+        print("Account not exist")
+        return False
+    else:
+        try:
+            if data_tmp[account_id]:
+                print(data_tmp[account_id])
+                acc_name = data_tmp[account_id]['name']
+                print("acc_name")
+                acc_currency = data_tmp[account_id]['currency']
+                acc_balance = data_tmp[account_id]['balance']
+                acc_status = data_tmp[account_id]['status']
+                account = Account(account_id, login, acc_name, acc_currency, acc_balance, acc_status)
+                return account
+        except:
+            print("Acc@@@@@@@")
+            return False

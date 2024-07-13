@@ -6,14 +6,16 @@ from models.transaction import Transaction
 from services.transaction_management import create_id_for_transaction
 from services.transaction_management import generate_report_user_story_6
 from services.transaction_management import generate_report_user_story_7
-from services.account_management import account_from_file
+from services.account_management import account_from_file, create_account_object_from_json
 from services.account_management import create_account
 from services.account_management import isValid
+from services.account_management import account_proof
 from services.authentication import login_fnc
 from services.authentication import logout_fnc
 from services.authentication import update_user_information
 from utils.currency_converter import converter
 from config.settings import Constants_and_variables
+from services.account_management import check_if_account_exists
 
 print("\n")
 # print("*****************************************")
@@ -61,9 +63,9 @@ while True:
     print("5. Display total balance")
     print("6. Report user story 6")
     print("7. Report user story 7")
-    print("8. Currency converter")
-    print("9. Logout")
-    print("10. Exit")
+    print("8. Transfer")
+    print("9. Currency converter")
+    print("10. Logout")
     print("11. Exit")
     choice = int(input("\nEnter your choice: "))
 
@@ -81,7 +83,7 @@ while True:
 
     # Create account
     elif choice == 2:
-        login = input("Enter your login: ")
+        # login = input("Enter your login: ")
         name = input("Enter accounts name: ")
         currency = input("Enter the number of currency for your account\n 1 - Rub \n 2 - $ \n 3 - €\nYour choice: ")
         balance = float(input("Enter the balance in your account: "))
@@ -90,7 +92,6 @@ while True:
     # Create transaction
     elif choice == 3:
         # Генерируем ID для транзакции
-        print(username)
         transaction_id = create_id_for_transaction(username)
 
         # Запрашиваем у пользователя данные о транзакции
@@ -106,11 +107,11 @@ while True:
             break
 
         description = input("Write a description of transaction: ")
-        current_date = datetime.datetime.now()
+        # current_date = datetime.datetime.now()
 
         # Создаём объект
         transaction = Transaction(transaction_id, username, account_id, amount, transaction_type, description,
-                                  current_date.strftime('%d.%m.%Y %H:%M:%S'))
+                                  datetime.datetime.now().strftime('%d.%m.%Y %H:%M:%S'))
 
         # Вытаскиваем из файла данные о счёте хитрым способом
         data = account_from_file(username, account_id)
@@ -150,10 +151,7 @@ while True:
         """
 
     elif choice == 6:
-        try:
-            account_id = int(input("Enter the account ID: "))
-        except ValueError:
-            print("Not correct number, please try again")
+        account_id = account_proof(username)
         while True:
             try:
                 dt_start = input(f'Enter the filtering start date in format "dd.mm.yyyy": ')
@@ -172,17 +170,12 @@ while True:
                 break
             except ValueError:
                 print("Not correct number, please try again")
-        print(username, 1, str(dt_start), str(dt_end), trans_type)
-        generate_report_user_story_6(username, account_id, str(dt_start), str(dt_end), trans_type)
+        generate_report_user_story_6(username, account_id, dt_start, dt_end, trans_type)
         break
 
 
     elif choice == 7:
-
-        try:
-            account_id = input("Enter the account ID: ")
-        except ValueError:
-            print("Not correct number, please try again")
+        account_id = account_proof(username)
         while True:
             try:
                 dt_start = input(f'Enter the filtering start date in format "dd.mm.yyyy": ')
@@ -192,25 +185,28 @@ while True:
                 break
             except:
                 print(
-                    f"Incorrect date format!\nPlease enter the date in the following format: {datetime.datetime.now().strftime('%d.%m.%Y')}")
+                    f"Incorrect date format!\nEnter the date in the following format! Example: {datetime.datetime.now().strftime('%d.%m.%Y')}")
 
-        generate_report_user_story_7(username, account_id, str(dt_start), str(dt_end))
+        generate_report_user_story_7(username, account_id, dt_start, dt_end)
 
         break
 
     elif choice == 8:
+        account_id = account_proof(username)
+        print(account_id)
+        account = create_account_object_from_json(username, str(account_id))
+        print(account.account_id)
+        account.transfer('1', 20.21)
+        # account = Account(account_id, username, name, currency, balance)
+
+    elif choice == 9:
         # asyncio.run(get_content(Paths.service_path))
         # asyncio.run(list_currency_rates_to_file(Paths.service_path))
         asyncio.run(converter("kzt", "rub", 1000))
         break
 
-
-    elif choice == 9:
-        logout_fnc(username)
-        break
-
     elif choice == 10:
-        print("Thanks, goodbye!")
+        logout_fnc(username)
         break
 
     elif choice == 11:

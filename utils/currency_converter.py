@@ -17,12 +17,13 @@ async def converter(currency_first, currency_two, amount):
     data = read_json(Paths.exchange_rates)
     if not data or not date_today in data:
         print("converter_from_internet")
-        await converter_from_internet(currency_first, currency_two, amount)
+        result = await converter_from_internet(currency_first, currency_two, amount)
         await list_currency_rates_to_file(Paths.service_path)
     else:
         if data[date_today]:
             print("converter_from_cash")
-            converter_from_cash(currency_first, currency_two, amount)
+            result = converter_from_cash(currency_first, currency_two, amount)
+        return result
 
 
 async def converter_from_internet(currency_first, currency_two, amount=1):
@@ -37,7 +38,6 @@ async def converter_from_internet(currency_first, currency_two, amount=1):
         rate_currency = content[currency_first]["rate"]
         rate_currency_to = content[currency_two]["rate"]
         result = round((amount / rate_currency) * rate_currency_to, 2)
-    print(result)
     return result
 
 
@@ -54,7 +54,6 @@ def converter_from_cash(currency_first, currency_two, amount=1):
         rate_currency = data[date][currency_first]["rate"]
         rate_currency_to = data[date][currency_two]["rate"]
         result = round((amount / rate_currency) * rate_currency_to, 2)
-    print(result)
     return result
 
 
