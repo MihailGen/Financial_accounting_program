@@ -82,9 +82,7 @@ def logger_events(type_operation) -> object:
             except FileNotFoundError:
                 print("File logs error")
             return result
-
         return wrapper
-
     return logger
 
 

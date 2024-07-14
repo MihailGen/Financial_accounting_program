@@ -11,7 +11,7 @@ import aiohttp
 currency = ("Reserved", "rub", "usd", "eur", "kzt", "cny", "byn")
 
 
-async def converter(currency_first, currency_two, amount):
+async def converter(currency_first, currency_two, amount:float):
     date_today = datetime.datetime.now().strftime('%d.%m.%y')
     print(date_today)
     data = read_json(Paths.exchange_rates)
@@ -44,10 +44,12 @@ async def converter_from_internet(currency_first, currency_two, amount=1):
 def converter_from_cash(currency_first, currency_two, amount=1):
     date = datetime.datetime.now().strftime('%d.%m.%y')
     data = read_json(Paths.exchange_rates)
-    if currency_first == "usd" or currency == "USD":
+    if currency_firs == currency_two:
+        return amount
+    if currency_first == "usd":
         rate_currency_to = data[date][currency_two]["rate"]
         result = round(amount * rate_currency_to, 2)
-    elif currency_two == "usd" or currency_two == "USD":
+    elif currency_two == "usd":
         rate_currency = data[date][currency_first]["rate"]
         result = round(amount / rate_currency, 2)
     else:

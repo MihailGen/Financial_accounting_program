@@ -5,6 +5,7 @@ import datetime
 import json
 
 from models.transaction import Transaction
+# from models.account import Account
 from utils.file_handler import read_json
 from config.settings import Paths
 from config.settings import Constants_and_variables
@@ -49,7 +50,7 @@ def generate_report_user_story_6(username, account_id, start_date, end_date, tra
     # Printing filtered transactions list
     for data in data_tmp_filtered:
         print(
-            f"ID:{data}, account name: {account_name}, amount: {data_tmp_filtered[data]['amount']}{Constants_and_variables.currency[int(currency_name)]}, "
+            f"ID:{data}, account name: {account_name}, amount: {data_tmp_filtered[data]['amount']} {Constants_and_variables.currency[int(currency_name)]}, "
             f"type: {data_tmp_filtered[data]['transaction_type']}, description: {data_tmp_filtered[data]['description']}, "
             f"{data_tmp_filtered[data]['date']}")
 

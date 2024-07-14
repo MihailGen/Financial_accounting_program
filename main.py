@@ -3,25 +3,22 @@ import asyncio
 from models.user import User
 from models.account import Account
 from models.transaction import Transaction
-from services.transaction_management import create_id_for_transaction
-from services.transaction_management import generate_report_user_story_6
+from services.transaction_management import create_id_for_transaction, generate_report_user_story_6
 from services.transaction_management import generate_report_user_story_7
 from services.account_management import account_from_file, create_account_object_from_json
-from services.account_management import create_account
-from services.account_management import isValid
-from services.account_management import account_proof
-from services.authentication import login_fnc
-from services.authentication import logout_fnc
+from services.account_management import create_account, isValid, account_proof
+from services.authentication import login_fnc, logout_fnc
 from services.authentication import update_user_information
 from utils.currency_converter import converter
 from config.settings import Constants_and_variables
-from services.account_management import check_if_account_exists
 
 print("\n")
 # print("*****************************************")
-print("₽₽₽-----***------$$$$$------***---------₽₽₽")
-print("€€€€€   FINANCIAL ACCOUNTING PROGRAM   €€€€")
-print("₽₽₽-----***------$$$$$------***---------₽₽₽")
+print("₽₽₽-----***------$$$$$--------***-------₽₽₽")
+print("€€€                                     €€€")
+print("₽₽₽     FINANCIAL ACCOUNTING PROGRAM    ₽₽₽")
+print("€€€                                     €€€")
+print("₽₽₽-----***------$$$$$--------***-------₽₽₽")
 print("\n")
 
 username = ''
@@ -60,7 +57,7 @@ while True:
     print("2. Create account")
     print("3. Create transaction")
     print("4. Display balance for account")
-    print("5. Display total balance")
+    print("5. Display account balance")
     print("6. Report user story 6")
     print("7. Report user story 7")
     print("8. Transfer")
@@ -86,7 +83,7 @@ while True:
         # login = input("Enter your login: ")
         name = input("Enter accounts name: ")
         currency = input("Enter the number of currency for your account\n 1 - Rub \n 2 - $ \n 3 - €\nYour choice: ")
-        balance = float(input("Enter the balance in your account: "))
+        balance = float(input("Enter the start balance in your account: "))
         create_account(username, name, currency, balance)
 
     # Create transaction
@@ -107,33 +104,20 @@ while True:
             break
 
         description = input("Write a description of transaction: ")
-        # current_date = datetime.datetime.now()
 
         # Создаём объект
         transaction = Transaction(transaction_id, username, account_id, amount, transaction_type, description,
                                   datetime.datetime.now().strftime('%d.%m.%Y %H:%M:%S'))
 
-        # Вытаскиваем из файла данные о счёте хитрым способом
-        data = account_from_file(username, account_id)
-
-        currency = data['currency']
-        name = data['name']
-        balance = data['balance']
-
-        # cоздаём объект account, на основе того, что вытащили, проводим операцию с балансом
-        account = Account(account_id, username, name, currency, balance)
-        if transaction_type == "Income":
-            account.add_income(amount)
-        if transaction_type == "Payment":
-            account.add_expense(amount)
-
-        # записываем операцию в JSON
         transaction.record_transaction()
         break
 
     # Display balance for account
     elif choice == 4:
-        print("Thanks, goodbye!")
+        account_id = str(account_proof(username))
+        account = create_account_object_from_json(username, account_id)
+        result = account.get_balance()
+        print(f'Balance {account.name}: {account.get_balance()}')
         break
 
     # Exit
@@ -192,11 +176,22 @@ while True:
         break
 
     elif choice == 8:
+        print("Enter the account ID from which you want to transfer")
         account_id = account_proof(username)
-        print(account_id)
+        print("Enter the account ID to which you want to transfer")
+        account_receiver = account_proof(username)
+        if account_id == account_receiver:
+            print("Accounts ID for transfer must be different!")
+            break
+        while True:
+            try:
+                amount = round(float(input("Enter the amount: ")),2)
+                break
+            except ValueError:
+                print("Not correct number, please try again")
         account = create_account_object_from_json(username, str(account_id))
         print(account.account_id)
-        account.transfer('1', 20.21)
+        account.transfer(account_receiver, amount)
         # account = Account(account_id, username, name, currency, balance)
 
     elif choice == 9:

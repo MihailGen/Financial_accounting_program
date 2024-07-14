@@ -7,7 +7,7 @@ from utils.file_handler import write_json, read_json
 
 class Transaction:
 
-    def __init__(self, transaction_id, username, account_id, amount, transaction_type, description, date):
+    def __init__(self, transaction_id: int, username: str, account_id: int, amount: float, transaction_type: str, description: str, date: str):
         self.transaction_id = transaction_id
         self.username = username
         self.account_id = account_id
@@ -19,6 +19,17 @@ class Transaction:
     # для записи транзакции в историю
     @logger_for_classmethod("Write transaction to history")
     def record_transaction(self):
+
+        # Change the balance in account
+        path = Paths.path_accounts(self.username)
+        data_tmp = read_json(path)
+        if self.transaction_type == "Income":
+            data_tmp[self.account_id]["balance"] += self.amount
+        else:
+            data_tmp[self.account_id]["balance"] -= self.amount
+        write_json(path, data_tmp)
+
+        # Write transaction to file
         data = {
             self.transaction_id: {
                 "username": self.username,

@@ -110,24 +110,25 @@ def account_proof(username):
     return account_id
 
 
-def create_account_object_from_json(login, account_id):
-    path = Paths.path_accounts(login)
+def create_account_object_from_json(username, account_id):
+    path = Paths.path_accounts(username)
     data_tmp = read_json(path)
-    print(data_tmp)
     if not data_tmp:
         print("Account not exist")
         return False
     else:
         try:
             if data_tmp[account_id]:
-                print(data_tmp[account_id])
                 acc_name = data_tmp[account_id]['name']
-                print("acc_name")
-                acc_currency = data_tmp[account_id]['currency']
-                acc_balance = data_tmp[account_id]['balance']
-                acc_status = data_tmp[account_id]['status']
-                account = Account(account_id, login, acc_name, acc_currency, acc_balance, acc_status)
+                acc_currency = int(data_tmp[account_id]['currency'])
+                acc_balance = float(data_tmp[account_id]['balance'])
+                if data_tmp[account_id]['status'] == '1':
+                    print("Account deleted!")
+                    return False
+                else:
+                    acc_status = data_tmp[account_id]['status']
+                account = Account(account_id, username, acc_name, acc_currency, acc_balance, acc_status)
                 return account
         except:
-            print("Acc@@@@@@@")
+            print("Account not exist")
             return False

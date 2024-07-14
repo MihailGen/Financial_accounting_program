@@ -24,3 +24,10 @@ def write_json(path, data):
         return path.write_text(json.dumps(data), encoding='utf-8')
     except json.decoder.JSONDecodeError:
         print("Invalid JSON")
+
+
+def update_account_balance(username, account_id, balance):
+    path = Paths.path_accounts(username)
+    data_tmp = read_json(path)
+    data_tmp[account_id]["balance"] = balance
+    write_json(path, data_tmp)
