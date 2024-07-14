@@ -31,3 +31,9 @@ def update_account_balance(username, account_id, balance):
     data_tmp = read_json(path)
     data_tmp[account_id]["balance"] = balance
     write_json(path, data_tmp)
+
+def update_account_status(username, account_id, status):
+    path = Paths.path_accounts(username)
+    data_tmp = read_json(path)
+    data_tmp[account_id]["status"] = status
+    write_json(path, data_tmp)

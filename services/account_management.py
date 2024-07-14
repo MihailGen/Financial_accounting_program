@@ -82,32 +82,35 @@ def create_id_for_account(login):
         return id_account
 
 
-def check_if_account_exists(id, login):
+def check_if_account_exists(account_id, login):
     path = Paths.path_accounts(login)
     data_tmp = read_json(path)
     if not data_tmp:
         return False
     else:
         try:
-            if data_tmp[str(id)]:
+            if data_tmp[account_id]:
+                if data_tmp[account_id]['status'] == 1:
+                    return False
                 return True
         except:
             return False
 
 
-def account_proof(username):
+def account_proof(username, message_str):
     while True:
         try:
             while True:
-                account_id = int(input("Enter the account ID: "))
+                account_id = int(input(message_str))
                 if not check_if_account_exists(str(account_id), username):
                     print(f"Account with ID {account_id} not exist")
+                    return False
                 else:
                     break
             break
         except ValueError:
             print("Not correct number, please try again")
-    return account_id
+    return str(account_id)
 
 
 def create_account_object_from_json(username, account_id):

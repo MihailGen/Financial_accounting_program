@@ -1,6 +1,6 @@
 from config.settings import Paths, Constants_and_variables
 from services.transaction_management import add_transaction
-from utils.file_handler import write_json, read_json, update_account_balance
+from utils.file_handler import write_json, read_json, update_account_balance, update_account_status
 from utils.currency_converter import converter
 import asyncio
 
@@ -34,9 +34,12 @@ class Account:
     def get_balance(self):
         return self.balance
 
+    def delete_account(self):
+        self.status = 1
+        update_account_status(self.username, self.account_id, self.status)
+
     # Осуществление перевода средств на другой счет
     def transfer(self, other_account, amount):
-        # self.add_expense(amount)
         transaction = add_transaction(self.account_id, self.username, amount, 'Payment', f"Transfer to {other_account}")
         transaction.record_transaction()
         # Узнаём, какая валюта на втором счёте
@@ -47,7 +50,5 @@ class Account:
         amount_converted = asyncio.run(converter(currency_first, currency_two, amount))
         transaction = add_transaction(other_account, self.username, amount_converted, 'Income', f"Transfer from {self.account_id}")
         transaction.record_transaction()
-        # data_tmp[str(other_account)]["balance"] = round(float(data_tmp[other_account]["balance"]) + float(amount_converted), 2)
-        # write_json(path, data_tmp)
 
 

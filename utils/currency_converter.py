@@ -44,12 +44,12 @@ async def converter_from_internet(currency_first, currency_two, amount=1):
 def converter_from_cash(currency_first, currency_two, amount=1):
     date = datetime.datetime.now().strftime('%d.%m.%y')
     data = read_json(Paths.exchange_rates)
-    if currency_firs == currency_two:
+    if currency_first == currency_two:
         return amount
-    if currency_first == "usd":
+    if currency_first == "usd" or currency_two == "USD":
         rate_currency_to = data[date][currency_two]["rate"]
         result = round(amount * rate_currency_to, 2)
-    elif currency_two == "usd":
+    elif currency_two == "usd" or currency_two == "USD":
         rate_currency = data[date][currency_first]["rate"]
         result = round(amount / rate_currency, 2)
     else:
