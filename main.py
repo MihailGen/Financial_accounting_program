@@ -7,7 +7,7 @@ from services.transaction_management import create_id_for_transaction, generate_
 from services.transaction_management import generate_report_user_story_7
 from services.account_management import account_from_file, create_account_object_from_json
 from services.account_management import create_account, isValid, account_proof
-from services.authentication import login_fnc, logout_fnc
+from services.authentication import login_fnc, logout_fnc, user_mail_from_Json
 from services.authentication import update_user_information
 from utils.currency_converter import converter
 from config.settings import Constants_and_variables
@@ -15,9 +15,9 @@ from config.settings import Constants_and_variables
 print("\n")
 # print("*****************************************")
 print("₽₽₽-----***------$$$$$--------***-------₽₽₽")
-print("€€€                                     €€€")
-print("₽₽₽     FINANCIAL ACCOUNTING PROGRAM    ₽₽₽")
-print("€€€                                     €€€")
+print("€€€            ~~~~~~~~~~               €€€")
+print("₽₽₽    FINANCIAL ACCOUNTING PROGRAM©    ₽₽₽")
+print("€€€             ~  v.1  ~               €€€")
 print("₽₽₽-----***------$$$$$--------***-------₽₽₽")
 print("\n")
 
@@ -28,6 +28,7 @@ while not username:
     password = input("Password: ")
     if login_fnc(log, password):
         username = log
+        user = User(log, password, user_mail_from_Json(username))
     else:
         print("\nLogin or password is wrong!\nWant to try again?\n")
         response = input("If yes, print Y,\nif You want to register, print R,\nif Exit, print any another key: ")
@@ -75,7 +76,8 @@ while True:
                 print("\nInvalid email forma!\n")
             else:
                 break
-        update_user_information(username, password, email)
+        user.update_profile(password, email)
+        #update_user_information(username, password, email)
 
 
     # Create account
@@ -187,7 +189,6 @@ while True:
             except ValueError:
                 print("Not correct number, please try again")
         account = create_account_object_from_json(username, str(account_id))
-        print(account.account_id)
         account.transfer(str(account_receiver), amount)
 
     elif choice == 9:

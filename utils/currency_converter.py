@@ -6,14 +6,11 @@ import os
 import asyncio
 import aiohttp
 
-
-
 currency = ("Reserved", "rub", "usd", "eur", "kzt", "cny", "byn")
 
 
-async def converter(currency_first, currency_two, amount:float):
+async def converter(currency_first, currency_two, amount: float):
     date_today = datetime.datetime.now().strftime('%d.%m.%y')
-    print(date_today)
     data = read_json(Paths.exchange_rates)
     if not data or not date_today in data:
         print("converter_from_internet")
@@ -95,6 +92,3 @@ async def get_currency_list(path_to_service):
         content = await get_content(path_to_service)
     for name in content:
         print(f"{name}: {content[name]['name']}")
-
-
-#asyncio.run(get_currency_list(Paths.service_path))

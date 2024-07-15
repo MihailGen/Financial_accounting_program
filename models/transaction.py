@@ -24,9 +24,9 @@ class Transaction:
         path = Paths.path_accounts(self.username)
         data_tmp = read_json(path)
         if self.transaction_type == "Income":
-            data_tmp[self.account_id]["balance"] += self.amount
+            data_tmp[self.account_id]["balance"] == round((float(data_tmp[self.account_id]["balance"]) + self.amount), 2)
         else:
-            data_tmp[self.account_id]["balance"] -= self.amount
+            data_tmp[self.account_id]["balance"] == round((float(data_tmp[self.account_id]["balance"]) - self.amount), 2)
         write_json(path, data_tmp)
 
         # Write transaction to file

@@ -89,14 +89,11 @@ def generate_report_user_story_7(username, account_id, start_date, end_date):
     Constants_and_variables.date_start = start_date
     Constants_and_variables.date_end = end_date
     Constants_and_variables.account_id = account_id
-    # Constants_and_variables.trans_type_account = 'Income'
     path = Paths.path_transactions(username)
     data_tmp = json.loads(path.read_text(encoding='utf-8'))
-    # Constants_and_variables.trans_type_account = 'Payment'
     data_tmp_filtered = dict(filter(filtering_fnc, data_tmp.items()))
     for key, value in data_tmp_filtered.items():
         if str(value['transaction_type']) == 'Income':
-            # total_list.append(value['amount'])
             total_income_list.append(value['amount'])
         else:
             total_expense_list.append(value['amount'])
@@ -121,13 +118,9 @@ def generate_report_user_story_7(username, account_id, start_date, end_date):
 
 # Addition a transaction
 def add_transaction(account_id, username, amount, transaction_type, description):
-    transaction = Transaction(create_id_for_transaction(username), username, account_id, amount, transaction_type, description, datetime.datetime.now().strftime('%d.%m.%Y %H:%M:%S'))
+    transaction = Transaction(create_id_for_transaction(username), username, account_id, amount, transaction_type,
+                              description, datetime.datetime.now().strftime('%d.%m.%Y %H:%M:%S'))
     return transaction
-
-
-# get a list of account transactions in a given date range
-def get_transactions(account_id, start_date, end_date):
-    pass
 
 
 def create_id_for_transaction(login):
