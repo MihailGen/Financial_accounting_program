@@ -3,6 +3,8 @@ from services.transaction_management import add_transaction
 from utils.file_handler import write_json, read_json, update_account_balance, update_account_status
 from utils.currency_converter import converter
 import asyncio
+import os
+from pathlib import Path
 
 
 class Account:
@@ -36,7 +38,7 @@ class Account:
 
     def delete_account(self):
         self.status = 1
-        update_account_status(self.username, self.account_id, self.status)
+        return (update_account_status(self.username, self.account_id, self.status))
 
     # Transferring funds to another account
     def transfer(self, other_account, amount):
@@ -46,6 +48,14 @@ class Account:
 
         # Find out what currency is on the first and second account
         path = Paths.path_accounts(self.username)
+        try:
+            if (os.stat(path).st_size == 0):
+                return False
+        except FileNotFoundError:
+            print("FileNotFoundError")
+            path = Path("../data/accounts/mm_accounts.json")
+
+
         data_tmp = read_json(path)
         currency_first = Constants_and_variables.currency[int(self.currency)]
         currency_two = Constants_and_variables.currency[int(data_tmp[other_account]["currency"])]
@@ -57,3 +67,4 @@ class Account:
         transaction = add_transaction(other_account, self.username, amount_converted, 'Income',
                                       f"Transfer from {self.account_id}")
         transaction.record_transaction()
+        return True

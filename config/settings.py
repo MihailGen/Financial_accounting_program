@@ -13,7 +13,7 @@ class Paths:
     service_path = "https://www.floatrates.com/daily/usd.json"
     date_start = ''
     date_end = ''
-    account_id =''
+    account_id = ''
 
     @classmethod
     def path_accounts(self, login):

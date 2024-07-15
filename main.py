@@ -14,11 +14,11 @@ from config.settings import Constants_and_variables
 
 print("\n")
 # print("*****************************************")
-print("₽₽₽-----***------$$$$$--------***-------₽₽₽")
+print("₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽")
 print("€€€            ~~~~~~~~~~               €€€")
-print("₽₽₽    FINANCIAL ACCOUNTING PROGRAM©    ₽₽₽")
+print("$$$    FINANCIAL ACCOUNTING PROGRAM©    $$$")
 print("€€€             ~  v.1  ~               €€€")
-print("₽₽₽-----***------$$$$$--------***-------₽₽₽")
+print("₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽₽")
 print("\n")
 
 username = ''
