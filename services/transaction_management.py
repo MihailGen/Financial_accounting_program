@@ -94,9 +94,9 @@ def generate_report_user_story_7(username, account_id, start_date, end_date):
     data_tmp_filtered = dict(filter(filtering_fnc, data_tmp.items()))
     for key, value in data_tmp_filtered.items():
         if str(value['transaction_type']) == 'Income':
-            total_income_list.append(value['amount'])
+            total_income_list.append(float(value['amount']))
         else:
-            total_expense_list.append(value['amount'])
+            total_expense_list.append(float(value['amount']))
 
     # Calling reduce function
     if total_income_list:

@@ -2,9 +2,11 @@ from models.account import Account
 from utils.file_handler import read_json
 from utils.file_handler import write_json
 from config.settings import Paths
+from pathlib import Path
 from utils.logger import logger_events
 import re
 import os
+import inspect
 
 
 # Управление счетами пользователей
@@ -13,6 +15,7 @@ import os
 def create_account(username, name, currency, balance):
     account = Account(create_id_for_account(username), username, name, currency, balance)
     save_account_to_json(username, account)
+    return account
 
 
 # write accounts to the JSON
@@ -27,12 +30,15 @@ def save_account_to_json(login, account):
         }
     }
     path = Paths.path_accounts(login)
-    # если файла не существует, записываем в него данные сразу
+    # for test only
+    if inspect.stack()[2][3] == '_callTestMethod':
+        path = Path("../data/accounts/mm_accounts.json")
+    # if the file does not exist, write the data to it immediately
     try:
         if not os.path.isfile(path):
             with open(path, "w", encoding="utf-8") as file:
                 write_json(path, data)
-        # иначе - вытаскиваем из файла структуру, дополняем её и вновь записываем
+        # otherwise, we extract the structure from the file, supplement it and write it again
         else:
             data_tmp = read_json(path)
             data_tmp.update(data)
@@ -42,11 +48,16 @@ def save_account_to_json(login, account):
                 write_json(path, data)
     except FileNotFoundError:
         return False
+    return True
 
 
-def account_from_file(username, account_id):
-    data_tmp = read_json(Paths.path_accounts(username))
-    return data_tmp[account_id]
+# def account_from_file(username, account_id):
+#     # for test only
+#     if inspect.stack()[2][3] == '_callTestMethod':
+#         data_tmp = read_json(Path("../data/accounts/mm_accounts.json"))
+#     else:
+#         data_tmp = read_json(Paths.path_accounts(username))
+#     return data_tmp[account_id]
 
 
 def update_account(account_id, name, currency, balance):
@@ -84,6 +95,9 @@ def create_id_for_account(login):
 
 def check_if_account_exists(account_id, login):
     path = Paths.path_accounts(login)
+    # for test only
+    if inspect.stack()[2][3] == '_callTestMethod':
+        path = Path("../data/accounts/mm_accounts.json")
     data_tmp = read_json(path)
     if not data_tmp:
         return False
@@ -115,6 +129,9 @@ def account_proof(username, message_str):
 
 def create_account_object_from_json(username, account_id):
     path = Paths.path_accounts(username)
+    # for test only
+    if inspect.stack()[2][3] == '_callTestMethod':
+        path = Path("../data/accounts/mm_accounts.json")
     data_tmp = read_json(path)
     if not data_tmp:
         print("Account not exist")

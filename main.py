@@ -5,7 +5,7 @@ from models.account import Account
 from models.transaction import Transaction
 from services.transaction_management import create_id_for_transaction, generate_report_user_story_6
 from services.transaction_management import generate_report_user_story_7
-from services.account_management import account_from_file, create_account_object_from_json
+from services.account_management import create_account_object_from_json
 from services.account_management import create_account, isValid, account_proof
 from services.authentication import login_fnc, logout_fnc, user_mail_from_Json
 from services.authentication import update_user_information

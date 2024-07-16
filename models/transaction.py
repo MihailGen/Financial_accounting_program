@@ -22,9 +22,9 @@ class Transaction:
     # для записи транзакции в историю
     @logger_for_classmethod("Write transaction to history")
     def record_transaction(self):
-        if inspect.currentframe().f_back.f_code.co_name == '_callTestMethod':
+        # if inspect.currentframe().f_back.f_code.co_name == '_callTestMethod':
             # print(f"Вызывающая: {inspect.currentframe().f_back.f_code.co_name}")
-            print('!!!Super')
+            # print('!!!Super')
         # Change the balance in account
         path = Paths.path_accounts(self.username)
 
@@ -79,3 +79,4 @@ class Transaction:
                     write_json(path, data)
         except FileNotFoundError:
             return False
+        return True
