@@ -31,8 +31,12 @@ def save_account_to_json(login, account):
     }
     path = Paths.path_accounts(login)
     # for test only
-    if inspect.stack()[2][3] == '_callTestMethod':
-        path = Path("../data/accounts/mm_accounts.json")
+    try:
+        if inspect.stack()[2][3] == '_callTestMethod':
+            path = Path("../data/accounts/mm_accounts.json")
+    except:
+        path = Paths.path_accounts(login)
+
     # if the file does not exist, write the data to it immediately
     try:
         if not os.path.isfile(path):
@@ -60,8 +64,12 @@ def save_account_to_json(login, account):
 #     return data_tmp[account_id]
 
 
-def update_account(account_id, name, currency, balance):
-    pass
+def update_account(username, account_id, name, currency, balance):
+    account = create_account_object_from_json(username, account_id)
+    account.name = name
+    account.currency = currency
+    account.balance = balance
+    save_account_to_json(username, account)
 
 
 def isValid(email):
@@ -105,6 +113,7 @@ def check_if_account_exists(account_id, login):
         try:
             if data_tmp[account_id]:
                 if data_tmp[account_id]['status'] == 1:
+                    print("Account are deleted!")
                     return False
                 return True
         except:
@@ -129,9 +138,14 @@ def account_proof(username, message_str):
 
 def create_account_object_from_json(username, account_id):
     path = Paths.path_accounts(username)
+
     # for test only
-    if inspect.stack()[2][3] == '_callTestMethod':
-        path = Path("../data/accounts/mm_accounts.json")
+    try:
+        if inspect.stack()[2][3] == '_callTestMethod':
+            path = Path("../data/accounts/mm_accounts.json")
+    except Exception as e:
+        path = Paths.path_accounts(username)
+
     data_tmp = read_json(path)
     if not data_tmp:
         print("Account not exist")

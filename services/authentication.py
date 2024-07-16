@@ -25,7 +25,7 @@ def login_fnc(login, password):
 # для выхода из системы,
 @logger_events("Logout")
 def logout_fnc(username):
-    print(f"Goodbye {username}!")
+    print(f"{username}! Thank you for using this program!")
     exit()
 
 
