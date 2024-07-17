@@ -47,6 +47,7 @@ def update_account_status(username, account_id, status):
     except FileNotFoundError as e:
         path = Path("../data/accounts/mm_accounts.json")
     data_tmp = read_json(path)
+    data_tmp[account_id]['status'] = status
     if write_json(path, data_tmp):
         return True
     else:

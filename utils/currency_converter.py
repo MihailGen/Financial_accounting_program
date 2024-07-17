@@ -6,16 +6,19 @@ import os
 import asyncio
 import aiohttp
 
+from utils.logger import logger_events
+
 currency = ("Reserved", "rub", "usd", "eur", "kzt", "cny", "byn")
 
-
+@logger_events("Currency converter")
 async def converter(currency_first, currency_two, amount: float):
     date_today = datetime.datetime.now().strftime('%d.%m.%y')
     data = read_json(Paths.exchange_rates)
-    if not data or not date_today in data:
+    if not data or date_today not in data:
         print("converter_from_internet")
         result = await converter_from_internet(currency_first, currency_two, amount)
         await list_currency_rates_to_file(Paths.service_path)
+        return result
     else:
         if data[date_today]:
             print("converter_from_cash")
@@ -63,7 +66,7 @@ async def list_currency_rates_to_file(path_to_service):
         datetime.datetime.now().strftime('%d.%m.%y'): content
     }
     try:
-        if not os.path.isfile(path_to_file):
+        if not os.path.isfile(path_to_file) or os.stat("file").st_size == 0:
             with open(path_to_file, "w", encoding="utf-8") as file:
                 write_json(path_to_file, data)
         else:

@@ -1,4 +1,4 @@
-from utils.logger import logger_for_classmethod
+from utils.logger import logger_for_Transaction
 from config.settings import Paths
 from pathlib import Path
 import os
@@ -20,11 +20,8 @@ class Transaction:
         self.date = date
 
     # для записи транзакции в историю
-    @logger_for_classmethod("Write transaction to history")
+    @logger_for_Transaction("Write transaction to history")
     def record_transaction(self):
-        # if inspect.currentframe().f_back.f_code.co_name == '_callTestMethod':
-            # print(f"Вызывающая: {inspect.currentframe().f_back.f_code.co_name}")
-            # print('!!!Super')
         # Change the balance in account
         path = Paths.path_accounts(self.username)
 
@@ -34,7 +31,6 @@ class Transaction:
                 path = Path("../data/accounts/mm_accounts.json")
         except FileNotFoundError as e:
             path = Path("../data/accounts/mm_accounts.json")
-
         data_tmp = read_json(path)
         if self.transaction_type == "Income":
             data_tmp[self.account_id]["balance"] == round((float(data_tmp[self.account_id]["balance"]) + self.amount),

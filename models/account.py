@@ -1,10 +1,13 @@
 from config.settings import Paths, Constants_and_variables
 from services.transaction_management import add_transaction
 from utils.file_handler import write_json, read_json, update_account_balance, update_account_status
+from utils.logger import logger_for_Account
 from utils.currency_converter import converter
+from functools import wraps
 import asyncio
 import os
 from pathlib import Path
+
 
 
 class Account:
@@ -17,12 +20,14 @@ class Account:
         self.status = status
 
     # Adding Income
+    @logger_for_Account("Addition income to account")
     def add_income(self, amount):
         self.balance += round(float(amount), 2)
         update_account_balance(self.username, self.account_id, self.balance)
         return self.balance
 
     # Expense registration
+    @logger_for_Account("Register expense from account")
     def add_expense(self, amount):
         if float(amount) < self.balance:
             self.balance -= round(float(amount), 2)
@@ -33,12 +38,15 @@ class Account:
         return self.balance
 
     # Getting the current balance
+    @logger_for_Account("Get balance")
     def get_balance(self):
         return self.balance
 
+    @logger_for_Account("Delete account")
     def delete_account(self):
         self.status = 1
         return (update_account_status(self.username, self.account_id, self.status))
+
 
     # Transferring funds to another account
     def transfer(self, other_account, amount):

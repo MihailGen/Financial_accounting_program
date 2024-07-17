@@ -26,7 +26,6 @@ def login_fnc(login, password):
 @logger_events("Logout")
 def logout_fnc(username):
     print(f"{username}! Thank you for using this program!")
-    exit()
 
 
 # для регистрации нового пользователя
@@ -47,7 +46,7 @@ def register(username, password, email):
         return False
     return True
 
-
+@logger_events("Update user information")
 def update_user_information(username, password, email):
     try:
         data_tmp = read_json(Paths.users_json)

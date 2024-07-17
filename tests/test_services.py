@@ -18,14 +18,19 @@ class Test(IsolatedAsyncioTestCase):
         result = await currency_converter.converter_from_internet('rub', 'usd', 100)
         self.assertEqual(result, 1.13)
 
-    async def test_converter_from_cash(self):
-        result = await currency_converter.converter_from_cash('rub', 'usd', 100)
+    def test_converter_from_cash(self):
+        result = currency_converter.converter_from_cash('rub', 'usd', 100)
         self.assertEqual(result, 1.13)
 
-    async def converter(self):
+    async def test_converter(self):
         Paths.exchange_rates = Path("../data/exchange_rates.json")
         result = await currency_converter.converter('rub', 'usd', 100)
         self.assertEqual(result, 1.13)
+
+    async def test_get_content(self):
+        Paths.exchange_rates = Path("../data/exchange_rates.json")
+        result = await currency_converter.get_content('https://www.floatrates.com/daily/usd.json')
+        self.assertEqual(result['aud']['name'], 'Australian Dollar')
 
 
 

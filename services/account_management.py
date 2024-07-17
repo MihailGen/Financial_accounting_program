@@ -39,7 +39,7 @@ def save_account_to_json(login, account):
 
     # if the file does not exist, write the data to it immediately
     try:
-        if not os.path.isfile(path):
+        if not os.path.isfile(path) or os.stat("file").st_size == 0:
             with open(path, "w", encoding="utf-8") as file:
                 write_json(path, data)
         # otherwise, we extract the structure from the file, supplement it and write it again
@@ -63,7 +63,7 @@ def save_account_to_json(login, account):
 #         data_tmp = read_json(Paths.path_accounts(username))
 #     return data_tmp[account_id]
 
-
+@logger_events("Update account")
 def update_account(username, account_id, name, currency, balance):
     account = create_account_object_from_json(username, account_id)
     account.name = name
@@ -113,7 +113,7 @@ def check_if_account_exists(account_id, login):
         try:
             if data_tmp[account_id]:
                 if data_tmp[account_id]['status'] == 1:
-                    print("Account are deleted!")
+                    print("Account are deleted! Try another!\n")
                     return False
                 return True
         except:
@@ -126,7 +126,6 @@ def account_proof(username, message_str):
             while True:
                 account_id = int(input(message_str))
                 if not check_if_account_exists(str(account_id), username):
-                    print(f"Account with ID {account_id} not exist")
                     return False
                 else:
                     break

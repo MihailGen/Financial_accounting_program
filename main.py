@@ -149,15 +149,14 @@ while True:
         else:
             print("Not correct number, please try again")
             break
-
         description = input("Write a description of transaction: ")
+        print("\n")
 
-        # Создаём объект
+        # Create object of klass Transaction
         transaction = Transaction(transaction_id, username, account_id, amount, transaction_type, description,
                                   datetime.datetime.now().strftime('%d.%m.%Y %H:%M:%S'))
 
         transaction.record_transaction()
-
 
     # Display balance for account
     elif choice == 4:
@@ -167,19 +166,19 @@ while True:
         print(f'Balance {account.name}: {account.get_balance()} {Constants_and_variables.currency[account.currency]}')
 
 
-    # Exit
+    # Delete account
     elif choice == 5:
         account_id = account_proof(username, "Please enter the ID\nwhich you want to delete: ")
         user_response = input("Are You sure?: Υ or N: ")
         if user_response in ("Y", "y"):
             account = create_account_object_from_json(username, account_id)
             account.delete_account()
-            print(f"Account: {account.name} successfully deleted!")
+            print(f"Account: {account.name} successfully deleted!\n")
         elif user_response in ("N", "n"):
-            print("Continue work!")
+            print("Continue work!\n")
 
 
-
+    # Report user story 6
     elif choice == 6:
         account_id = account_proof(username, "Please, enter your account ID for report\n\"User history 6\": ")
         if not account_id:
@@ -206,25 +205,26 @@ while True:
         generate_report_user_story_6(username, account_id, dt_start, dt_end, trans_type)
 
 
-
+    # Report user story 7
     elif choice == 7:
         account_id = account_proof(username, "Please, enter your account ID for report\n\"User history 7\": ")
-        while True:
-            try:
-                dt_start = input(f'Enter the filtering start date in format "dd.mm.yyyy": ')
-                except_generator = datetime.datetime.strptime(dt_start, "%d.%m.%Y")
-                dt_end = input(f'Enter the filtering end date in format "dd.mm.yyyy": ')
-                except_generator = datetime.datetime.strptime(dt_end, "%d.%m.%Y")
-                break
-            except:
-                print(
-                    f"Incorrect date format!\nEnter the date in the following format! Example: {datetime.datetime.now().strftime('%d.%m.%Y')}")
+        if account_id:
+            while True:
+                try:
+                    dt_start = input(f'Enter the filtering start date in format "dd.mm.yyyy": ')
+                    except_generator = datetime.datetime.strptime(dt_start, "%d.%m.%Y")
+                    dt_end = input(f'Enter the filtering end date in format "dd.mm.yyyy": ')
+                    except_generator = datetime.datetime.strptime(dt_end, "%d.%m.%Y")
+                    break
+                except:
+                    print(
+                        f"Incorrect date format!\nEnter the date in the following format! Example: {datetime.datetime.now().strftime('%d.%m.%Y')}")
 
-        generate_report_user_story_7(username, account_id, dt_start, dt_end)
+            generate_report_user_story_7(username, account_id, dt_start, dt_end)
 
 
 
-
+    # Update account
     elif choice == 8:
         account_id = account_proof(username, "Please enter the ID\nwhich you want to update: ")
         user_response = input("Are You sure?: Υ or N: ")
@@ -242,13 +242,13 @@ while True:
                     print(err)
             balance = round(float(input("Enter the new account balance: ")), 2)
             update_account(username, account_id, name, currency, balance)
-            print(f"Account: {name} successfully updated!")
+            print(f"Account: {name} successfully updated!\n")
         elif user_response in ("N", "n"):
-            print("Continue work!")
+            print("Continue work!\n")
 
 
 
-
+    # Transfer
     elif choice == 9:
         account_id = account_proof(username, "Enter the account ID from which you want to transfer: ")
         account_receiver = account_proof(username, "Enter the account ID to which you want to transfer: ")
@@ -264,8 +264,7 @@ while True:
         account = create_account_object_from_json(username, str(account_id))
         account.transfer(str(account_receiver), amount)
 
-
-
+    # Currency convertor
     elif choice == 10:
         print("\n*************************************\nStart currency exchange calculator\n")
         while True:
@@ -304,6 +303,7 @@ while True:
             f"{res} {Constants_and_variables.currency[currency_two]} "
             f"rate {datetime.datetime.now().strftime('%d.%m.%Y')}\n")
 
+    # Logout
     elif choice == 11:
         logout_fnc(username)
         break
