@@ -77,5 +77,4 @@ def hash_funct(pswd):
         mult = mult * ord(pswd[i])
     summ = summ % config.settings.CONST_FOR_HASH
     mult = mult % config.settings.CONST_FOR_HASH
-
     return str(summ) + str(mult)

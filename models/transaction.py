@@ -33,11 +33,14 @@ class Transaction:
             path = Path("../data/accounts/mm_accounts.json")
         data_tmp = read_json(path)
         if self.transaction_type == "Income":
-            data_tmp[self.account_id]["balance"] == round((float(data_tmp[self.account_id]["balance"]) + self.amount),
-                                                          2)
+            data_tmp[self.account_id]["balance"] = float(data_tmp[self.account_id]["balance"] - self.amount)
         else:
-            data_tmp[self.account_id]["balance"] == round((float(data_tmp[self.account_id]["balance"]) - self.amount),
-                                                          2)
+            if data_tmp[self.account_id]["balance"] >= self.amount:
+                data_tmp[self.account_id]["balance"] = float(data_tmp[self.account_id]["balance"] - self.amount)
+            else:
+                print('You don`t have enough funds in your account!\nTransaction canceled!\n')
+                return False
+
         write_json(path, data_tmp)
 
         # Write transaction to file

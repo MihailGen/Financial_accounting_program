@@ -72,7 +72,7 @@ def update_account(username, account_id, name, currency, balance):
     save_account_to_json(username, account)
 
 
-def isValid(email):
+def is_correct_email(email):
     regex = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
     if re.fullmatch(regex, email):
         print("Valid email")
@@ -81,6 +81,13 @@ def isValid(email):
         print("Invalid email")
         return False
 
+def is_correct_amount(amount):
+    regex = re.compile(r"(\d*(\.\d)?(\d)?)")
+    if re.fullmatch(regex, amount):
+        return True
+    else:
+        print("Invalid amount")
+        return False
 
 # rewrite balance
 def update_account_balance(username, account_id, balance):

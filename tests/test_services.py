@@ -36,7 +36,7 @@ class Test(IsolatedAsyncioTestCase):
 
 class Test_Services(unittest.TestCase):
     def test_isValid(self):
-        result = account_management.isValid("user&inbox.ru")
+        result = account_management.is_correct_email("user&inbox.ru")
         self.assertEqual(result, False)
 
     def test_save_account_to_json(self):
