@@ -320,7 +320,7 @@ while True:
                 break
         res = asyncio.run(
             converter(Constants_and_variables.currency[currency_first], Constants_and_variables.currency[currency_two],
-                      amount))
+                      float(amount)))
         print(
             f"{amount} {Constants_and_variables.currency[currency_first]} = "
             f"{res} {Constants_and_variables.currency[currency_two]} "
