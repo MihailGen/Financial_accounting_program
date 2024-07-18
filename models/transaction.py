@@ -24,12 +24,11 @@ class Transaction:
     def record_transaction(self):
         # Change the balance in account
         path = Paths.path_accounts(self.username)
-
         # For tests
         try:
             if (os.stat(path).st_size == 0):
                 path = Path("../data/accounts/mm_accounts.json")
-        except FileNotFoundError as e:
+        except FileNotFoundError:
             path = Path("../data/accounts/mm_accounts.json")
         data_tmp = read_json(path)
         if self.transaction_type == "Income":
@@ -57,25 +56,25 @@ class Transaction:
 
         path = Paths.path_transactions(self.username)
 
+        # for test only
         try:
-            if (os.stat(path).st_size == 0):
+            if inspect.stack()[2][3] == '_callTestMethod':
                 path = Path("../data/transactions/mm_transactions.json")
+
         except FileNotFoundError as e:
-            path = Path("../data/transactions/mm_transactions.json")
+            path = Paths.path_transactions(self.username)
 
         # если файла не существует, записываем в него данные сразу
-        try:
-            if not os.path.isfile(path):
-                with open(path, "w", encoding="utf-8") as file:
-                    write_json(path, data)
+        if not os.path.isfile(path):
+            with open(path, "w", encoding="utf-8") as file:
+                write_json(path, data)
             # иначе - вытаскиваем из файла структуру, дополняем её и вновь записываем
+        else:
+            data_tmp = read_json(path)
+            data_tmp.update(data)
+            if data_tmp:
+                write_json(path, data_tmp)
             else:
-                data_tmp = read_json(path)
-                data_tmp.update(data)
-                if data_tmp:
-                    write_json(path, data_tmp)
-                else:
-                    write_json(path, data)
-        except FileNotFoundError:
-            return False
+                write_json(path, data)
+
         return True

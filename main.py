@@ -62,10 +62,11 @@ while not username:
                     print(err)
 
             while True:
-                balance = input("Enter the amount: ")
+                balance = input("Enter the balance: ")
                 if is_correct_amount(balance):
                     break
-            create_account(login, name, currency, balance)
+
+            create_account(login, name, currency, float(balance))
 
             print("")
             username = login

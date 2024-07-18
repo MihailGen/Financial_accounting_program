@@ -40,8 +40,8 @@ def save_account_to_json(login, account):
     # if the file does not exist, write the data to it immediately
     # try:
     if not os.path.isfile(path):
-        print("2" + str(path))
-        with open(path, "w", encoding="utf-8") as file:
+        # with open(path, "w", encoding="utf-8") as file:
+        with open(path, "w") as file:
             write_json(path, data)
         # otherwise, we extract the structure from the file, supplement it and write it again
     else:
@@ -53,15 +53,6 @@ def save_account_to_json(login, account):
     print(f'******\nCongratulation! Account {account.name} created successfully!\n')
 
     return True
-
-
-# def account_from_file(username, account_id):
-#     # for test only
-#     if inspect.stack()[2][3] == '_callTestMethod':
-#         data_tmp = read_json(Path("../data/accounts/mm_accounts.json"))
-#     else:
-#         data_tmp = read_json(Paths.path_accounts(username))
-#     return data_tmp[account_id]
 
 @logger_events("Update account")
 def update_account(username, account_id, name, currency, balance):
