@@ -250,7 +250,7 @@ while True:
                 except ValueError as err:
                     print(err)
             while True:
-                balance = input("Enter the amount: ")
+                balance = input("Enter the new balance: ")
                 if is_correct_amount(balance):
                     break
 

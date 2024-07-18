@@ -32,7 +32,7 @@ class Transaction:
             path = Path("../data/accounts/mm_accounts.json")
         data_tmp = read_json(path)
         if self.transaction_type == "Income":
-            data_tmp[self.account_id]["balance"] = float(data_tmp[self.account_id]["balance"] - self.amount)
+            data_tmp[self.account_id]["balance"] = float(data_tmp[self.account_id]["balance"] + self.amount)
         else:
             if data_tmp[self.account_id]["balance"] >= self.amount:
                 data_tmp[self.account_id]["balance"] = float(data_tmp[self.account_id]["balance"] - self.amount)
