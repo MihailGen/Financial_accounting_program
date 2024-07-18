@@ -38,20 +38,20 @@ def save_account_to_json(login, account):
         path = Paths.path_accounts(login)
 
     # if the file does not exist, write the data to it immediately
-    try:
-        if not os.path.isfile(path) or os.stat("file").st_size == 0:
-            with open(path, "w", encoding="utf-8") as file:
-                write_json(path, data)
+    # try:
+    if not os.path.isfile(path):
+        print("2" + str(path))
+        with open(path, "w", encoding="utf-8") as file:
+            write_json(path, data)
         # otherwise, we extract the structure from the file, supplement it and write it again
-        else:
-            data_tmp = read_json(path)
-            data_tmp.update(data)
-            if data_tmp:
-                write_json(path, data_tmp)
-            else:
-                write_json(path, data)
-    except FileNotFoundError:
-        return False
+    else:
+        data_tmp = read_json(path)
+        data_tmp.update(data)
+        if data_tmp:
+            write_json(path, data_tmp)
+
+    print(f'******\nCongratulation! Account {account.name} created successfully!\n')
+
     return True
 
 
@@ -81,6 +81,7 @@ def is_correct_email(email):
         print("Invalid email")
         return False
 
+
 def is_correct_amount(amount):
     regex = re.compile(r"(\d*(\.\d)?(\d)?)")
     if re.fullmatch(regex, amount):
@@ -88,6 +89,7 @@ def is_correct_amount(amount):
     else:
         print("Invalid amount")
         return False
+
 
 # rewrite balance
 def update_account_balance(username, account_id, balance):

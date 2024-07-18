@@ -65,7 +65,7 @@ while not username:
                 balance = input("Enter the amount: ")
                 if is_correct_amount(balance):
                     break
-            create_account(username, name, currency, balance)
+            create_account(login, name, currency, balance)
 
             print("")
             username = login
@@ -122,13 +122,11 @@ while True:
                 print(err)
 
         while True:
-            try:
-                balance = round(float(input("Enter the start balance in your account: ")), 2)
+            balance = input("Enter the amount: ")
+            if is_correct_amount(balance):
                 break
-            except ValueError:
-                print("Invalid balance. Please try again.")
 
-        create_account(username, name, currency, balance)
+        create_account(username, name, currency, float(balance))
 
     # Create transaction
     elif choice == 3:
@@ -160,8 +158,8 @@ while True:
         description = input("Write a description of transaction: ")
         print("\n")
 
-        print(transaction_id, username, account_id, amount, transaction_type, description,
-              datetime.datetime.now().strftime('%d.%m.%Y %H:%M:%S'))
+        # print(transaction_id, username, account_id, amount, transaction_type, description,
+        #       datetime.datetime.now().strftime('%d.%m.%Y %H:%M:%S'))
 
         # Create object of klass Transaction
         transaction = Transaction(transaction_id, username, account_id, float(amount), transaction_type, description,
