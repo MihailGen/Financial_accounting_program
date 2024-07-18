@@ -120,7 +120,7 @@ def check_if_account_exists(account_id, login):
         try:
             if data_tmp[account_id]:
                 if data_tmp[account_id]['status'] == 1:
-                    print("Account are deleted! Try another!\n")
+                    print("the account was deleted! Try another!\n")
                     return False
                 return True
         except:

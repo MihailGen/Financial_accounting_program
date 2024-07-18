@@ -193,28 +193,26 @@ while True:
     # Report user story 6
     elif choice == 6:
         account_id = account_proof(username, "Please, enter your account ID for report\n\"User history 6\": ")
-        if not account_id:
-            break
-
-        while True:
-            try:
-                dt_start = input(f'Enter the filtering start date in format "dd.mm.yyyy": ')
-                except_generator = datetime.datetime.strptime(dt_start, "%d.%m.%Y")
-                dt_end = input(f'Enter the filtering end date in format "dd.mm.yyyy": ')
-                except_generator = datetime.datetime.strptime(dt_end, "%d.%m.%Y")
-                break
-            except:
-                print(
-                    f"Incorrect date format!\nPlease enter the date in the following format: {datetime.datetime.now().strftime('%d.%m.%Y')}")
-        while True:
-            try:
-                trans_type = int(input("Enter the type of transaction: \n"
-                                       "1 - Income, 2 - Payment: "))
-                trans_type = Constants_and_variables.trans_type[trans_type - 1]
-                break
-            except ValueError:
-                print("Not correct number, please try again")
-        generate_report_user_story_6(username, account_id, dt_start, dt_end, trans_type)
+        if account_id:
+            while True:
+                try:
+                    dt_start = input(f'Enter the filtering start date in format "dd.mm.yyyy": ')
+                    except_generator = datetime.datetime.strptime(dt_start, "%d.%m.%Y")
+                    dt_end = input(f'Enter the filtering end date in format "dd.mm.yyyy": ')
+                    except_generator = datetime.datetime.strptime(dt_end, "%d.%m.%Y")
+                    break
+                except:
+                    print(
+                        f"Incorrect date format!\nPlease enter the date in the following format: {datetime.datetime.now().strftime('%d.%m.%Y')}")
+            while True:
+                try:
+                    trans_type = int(input("Enter the type of transaction: \n"
+                                           "1 - Income, 2 - Payment: "))
+                    trans_type = Constants_and_variables.trans_type[trans_type - 1]
+                    break
+                except ValueError:
+                    print("Not correct number, please try again")
+            generate_report_user_story_6(username, account_id, dt_start, dt_end, trans_type)
 
 
     # Report user story 7
