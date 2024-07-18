@@ -164,7 +164,7 @@ while True:
               datetime.datetime.now().strftime('%d.%m.%Y %H:%M:%S'))
 
         # Create object of klass Transaction
-        transaction = Transaction(transaction_id, username, account_id, amount, transaction_type, description,
+        transaction = Transaction(transaction_id, username, account_id, float(amount), transaction_type, description,
                                   datetime.datetime.now().strftime('%d.%m.%Y %H:%M:%S'))
         transaction.record_transaction()
 
@@ -251,11 +251,11 @@ while True:
                 except ValueError as err:
                     print(err)
             while True:
-                amount = input("Enter the amount: ")
-                if is_correct_amount(amount):
+                balance = input("Enter the amount: ")
+                if is_correct_amount(balance):
                     break
 
-            update_account(username, account_id, name, currency, balance)
+            update_account(username, account_id, name, currency, float(balance))
             print(f"Account: {name} successfully updated!\n")
         elif user_response in ("N", "n"):
             print("Continue work!\n")
@@ -287,7 +287,7 @@ while True:
             if is_correct_amount(amount):
                 break
         account = create_account_object_from_json(username, str(account_id))
-        account.transfer(str(account_receiver), amount)
+        account.transfer(str(account_receiver), float(amount))
 
     # Currency convertor
     elif choice == 10:
