@@ -15,13 +15,13 @@ async def converter(currency_first, currency_two, amount: float):
     date_today = datetime.datetime.now().strftime('%d.%m.%y')
     data = read_json(Paths.exchange_rates)
     if not data or date_today not in data:
-        print("converter_from_internet")
+        print("converter from internet")
         result = await converter_from_internet(currency_first, currency_two, amount)
         await list_currency_rates_to_file(Paths.service_path)
         return result
     else:
         if data[date_today]:
-            print("converter_from_cash")
+            print("converter from cash")
             result = converter_from_cash(currency_first, currency_two, amount)
         return result
 
@@ -62,11 +62,12 @@ def converter_from_cash(currency_first, currency_two, amount=1):
 async def list_currency_rates_to_file(path_to_service):
     path_to_file = Paths.exchange_rates
     content = await get_content(path_to_service)
+    print(content)
     data = {
         datetime.datetime.now().strftime('%d.%m.%y'): content
     }
     try:
-        if not os.path.isfile(path_to_file) or os.stat("file").st_size == 0:
+        if not os.path.isfile(path_to_file) or os.stat(path_to_file).st_size == 0:
             with open(path_to_file, "w", encoding="utf-8") as file:
                 write_json(path_to_file, data)
         else:

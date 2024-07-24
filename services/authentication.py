@@ -12,10 +12,10 @@ def login_fnc(login, password):
     data_tmp = read_json(Paths.users_json)
     if login in data_tmp:
         if (data_tmp[login][0] == hash_funct(password)):
-            print("Password is correct")
+            print("\n")
             return True
         else:
-            print("Password is incorrect")
+            print("Password is incorrect\n")
             return False
     else:
         print(f"Login {login} unregistered")

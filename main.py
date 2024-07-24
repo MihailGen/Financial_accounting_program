@@ -323,7 +323,7 @@ while True:
         print(
             f"{amount} {Constants_and_variables.currency[currency_first]} = "
             f"{res} {Constants_and_variables.currency[currency_two]} "
-            f"rate {datetime.datetime.now().strftime('%d.%m.%Y')}\n")
+            f"(rate {datetime.datetime.now().strftime('%d.%m.%Y')})\n")
 
     # Logout
     elif choice == 11:
